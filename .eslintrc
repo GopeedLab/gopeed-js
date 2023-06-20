@@ -1,0 +1,22 @@
+{
+  "ignorePatterns": ["node_modules/", "dist/"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "eslint:recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint/eslint-plugin",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error"
+  },
+  "env": {
+    "browser": true
+  }
+}

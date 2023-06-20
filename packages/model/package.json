@@ -1,0 +1,15 @@
+{
+  "name": "@gopeed/model",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
