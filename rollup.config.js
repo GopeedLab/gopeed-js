@@ -24,18 +24,22 @@ const packages = fs.readdirSync(packagesDir).filter((f) => {
   return true;
 });
 
+// 把gopeed-model包排在第一位，因为其它包依赖了model包
+const modelIndex = packages.findIndex((pkgName) => pkgName === 'gopeed-model');
+packages.unshift(packages.splice(modelIndex, 1)[0]);
+
 export default packages.map((pkgName) => {
   const pkg = JSON.parse(fs.readFileSync(path.join(packagesDir, pkgName, 'package.json'), 'utf-8'));
   return {
     input: `packages/${pkgName}/src/index.ts`,
     output: [
       {
-        file: `packages/${pkgName}/${pkg.main}`,
+        file: `packages/${pkgName}/dist/index.cjs`,
         format: 'cjs',
         sourcemap: false,
       },
       {
-        file: `packages/${pkgName}/${pkg.module}`,
+        file: `packages/${pkgName}/dist/index.js`,
         format: 'esm',
         sourcemap: false,
       },

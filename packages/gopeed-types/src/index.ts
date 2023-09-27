@@ -7,6 +7,13 @@ export interface HttpReqExtra {
   body: string | undefined;
 }
 
+export interface BtReqExtra {
+  /**
+   * Tracker url list
+   */
+  trackers: string[];
+}
+
 export interface HttpOptExtra {
   /**
    * Concurrent connections
@@ -14,19 +21,12 @@ export interface HttpOptExtra {
   connections: number;
 }
 
-export interface BtOptExtra {
-  /**
-   * Tracker url list
-   */
-  trackers: string[];
-}
-
 /**
  * Download request
  */
 export interface Request {
   url: string;
-  extra: HttpReqExtra;
+  extra: HttpReqExtra | BtReqExtra;
 }
 
 export interface FileInfo {
@@ -44,7 +44,6 @@ export interface Resource {
   name: string;
   size: number;
   range: boolean;
-  rootDir: string;
   files: FileInfo[];
   hash: string;
 }
@@ -70,7 +69,7 @@ export interface Options {
    * Select the index of the specified file, if not set, download all files
    */
   selectFiles: number[];
-  extra: HttpOptExtra | BtOptExtra;
+  extra: HttpOptExtra;
 }
 
 export type TaskStatus = 'ready' | 'running' | 'pause' | 'wait' | 'error' | 'done';
@@ -108,4 +107,14 @@ export interface Task {
    * @example 2023-03-04T19:11:01.8468886+08:00
    */
   createdAt: string;
+}
+
+export interface CreateTaskWithResolveResult {
+  id: string;
+  opts: Options;
+}
+
+export interface CreateTaskWithRequest {
+  req: Request;
+  opts: Options;
 }

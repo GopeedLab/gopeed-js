@@ -2,10 +2,19 @@
   "name": "@gopeed/rest",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "type": "module",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc index.ts"
   },
@@ -13,6 +22,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@gopeed/model": "workspace:*"
+    "@gopeed/types": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import { Request, Resource } from '@gopeed/model';
+import { Request, Resource } from '@gopeed/types';
 
 interface OnResovleContext {
   req: Request;
