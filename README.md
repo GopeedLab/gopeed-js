@@ -1,4 +1,4 @@
-# Gopeed Javascript Monerepo
+# Gopeed Javascript Monorepo
 
 Gopeed development kit for javascript.
 

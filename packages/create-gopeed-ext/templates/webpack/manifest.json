@@ -1,0 +1,22 @@
+{
+  "name": "gopeed-extention-demo",
+  "author": "",
+  "title": "gopeed extention demo title",
+  "description": "gopeed extention demo description",
+  "icon": "",
+  "version": "1.0.0",
+  "homepage": "",
+  "repository": {
+    "url": ""
+  },
+  "scripts": [
+    {
+      "event": "onResolve",
+      "matches": [
+        "*://github.com/*"
+      ],
+      "entry": "dist/index.js"
+    }
+  ],
+  "settings": []
+}

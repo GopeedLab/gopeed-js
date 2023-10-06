@@ -1,9 +1,9 @@
-import Hooks from './extension';
+import Events from './extension';
 
 interface Gopeed {
-  hooks: Hooks;
+  events: Events;
 }
 
-declare global {
-  const gopeed: Gopeed;
-}
+declare const gopeed: Gopeed;
+
+export default gopeed;

@@ -5,9 +5,9 @@ interface OnResovleContext {
   res: Resource;
 }
 
-interface Hooks {
+interface Events {
   // eslint-disable-next-line no-unused-vars
-  onResovle(handler: (ctx: OnResovleContext) => void): void;
+  onResolve(handler: (ctx: OnResovleContext) => void): void;
 }
 
-export default Hooks;
+export default Events;
