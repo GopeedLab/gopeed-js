@@ -7,19 +7,27 @@ import prompts from 'prompts';
 import validateNpmName from 'validate-npm-package-name';
 import packageJson from './package.json' assert { type: 'json' };
 
-let projectName;
+async function initAction() {
+  const result = await prompts([
+    {
+      type: 'text',
+      name: 'project',
+      message: 'Project name (gopeed-extension-demo)',
+    },
+    {
+      type: 'select',
+      name: 'template',
+      message: 'Choose a template',
+      choices: [
+        { title: 'Webpack', description: 'Webpack + Eslint + Prettier', value: 'webpack' },
+        { title: 'Pure', description: 'Pure Javascript', value: 'pure' },
+      ],
+      initial: 0,
+    },
+  ]);
 
-async function initAction(program) {
-  if (!projectName) {
-    console.error('Please specify the project directory:');
-    console.log(`  ${chalk.cyan(program.name())} ${chalk.green('<project-directory>')}`);
-    console.log();
-    console.log('For example:');
-    console.log(`  ${chalk.cyan(program.name())} ${chalk.green('gopeed-test-extension')}`);
-    console.log();
-    console.log(`Run ${chalk.cyan(`${program.name()} --help`)} to see all options.`);
-    process.exit(1);
-  }
+  const projectName = result.project || 'gopeed-extension-demo';
+  const template = result.template;
 
   // check if project name is valid
   const validResult = validateNpmName(projectName);
@@ -43,22 +51,9 @@ async function initAction(program) {
     process.exit(1);
   }
 
-  const template = await prompts([
-    {
-      type: 'select',
-      name: 'value',
-      message: 'Choose a template',
-      choices: [
-        { title: 'Webpack', description: 'Webpack + Eslint + Prettier', value: 'webpack' },
-        { title: 'Pure', description: 'Pure Javascript', value: 'pure' },
-      ],
-      initial: 0,
-    },
-  ]);
-
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const templatePath = path.join(__dirname, 'templates', template.value);
+  const templatePath = path.join(__dirname, 'templates', template);
 
   // copy template files to target dir recursively
   copyDir(templatePath, projectPath);
@@ -92,11 +87,6 @@ async function initAction(program) {
 function init() {
   const program = new commander.Command(packageJson.name)
     .version(packageJson.version)
-    .arguments('<project-directory>')
-    .usage(`${chalk.green('<project-directory>')} [options]`)
-    .action((name) => {
-      projectName = name;
-    })
     .allowUnknownOption()
     .parse(process.argv);
 
