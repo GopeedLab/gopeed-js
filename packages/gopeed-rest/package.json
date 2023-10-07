@@ -18,7 +18,10 @@
   "scripts": {
     "build": "tsc index.ts"
   },
-  "keywords": [],
+  "keywords": [
+    "gopeed",
+    "gopeed-rest"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {

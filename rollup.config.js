@@ -21,6 +21,17 @@ const packages = fs.readdirSync(packagesDir).filter((f) => {
   return true;
 });
 
+// sort packages, gopeed-types should be first
+packages.sort((a, b) => {
+  if (a === 'gopeed-types') {
+    return -1;
+  }
+  if (b === 'gopeed-types') {
+    return 1;
+  }
+  return a.localeCompare(b);
+});
+
 export default packages.map((pkgName) => {
   const pkg = JSON.parse(fs.readFileSync(path.join(packagesDir, pkgName, 'package.json'), 'utf-8'));
   return {

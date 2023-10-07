@@ -1,8 +1,20 @@
-import { CreateTaskWithRequest, CreateTaskWithResolveResult, ResolveResult, Task, TaskStatus } from '@gopeed/types';
+import type {
+  CreateTaskWithRequest,
+  CreateTaskWithResolveResult,
+  ResolveResult,
+  Task,
+  TaskStatus,
+} from '@gopeed/types';
 
 interface ClientOptions {
   host: string;
   token: string;
+}
+
+interface Result<T> {
+  code: number;
+  msg: string;
+  data: T;
 }
 
 class ApiError extends Error {
@@ -25,33 +37,33 @@ class Client {
 
   /**
    * Resolve the download request
-   * @param request
+   * @param request - The request to create a new download task
    * @returns
    */
   public async resole(request: Request): Promise<ResolveResult> {
-    return await this.doRequest<ResolveResult>('POST', '/api/v1/resolve', {
+    return this.doRequest<ResolveResult>('POST', '/api/v1/resolve', {
       data: request,
     });
   }
 
   /**
    * Create a new download task
-   * @param request
+   * @param request - The request to create a new download task
    * @returns
    */
   public async createTask(request: CreateTaskWithResolveResult | CreateTaskWithRequest): Promise<string> {
-    return await this.doRequest<string>('POST', '/api/v1/tasks', {
+    return this.doRequest<string>('POST', '/api/v1/tasks', {
       data: request,
     });
   }
 
   /**
    * Get task list
-   * @param statuses
+   * @param statuses - Filter by task status
    * @returns
    */
   public async getTasks(statuses: TaskStatus[] = []): Promise<Task[]> {
-    return await this.doRequest<Task[]>('GET', '/api/v1/tasks', {
+    return this.doRequest<Task[]>('GET', '/api/v1/tasks', {
       query: {
         status: statuses.join(','),
       },
@@ -60,41 +72,41 @@ class Client {
 
   /**
    * Pause a task
-   * @param id
+   * @param id - Task id
    */
   public async pauseTask(id: string): Promise<void> {
-    return await this.doRequest('PUT', `/api/v1/tasks/${id}/pause`);
+    await this.doRequest('PUT', `/api/v1/tasks/${id}/pause`);
   }
 
   /**
    * Continue a task
-   * @param id
+   * @param id - Task id
    */
   public async continueTask(id: string): Promise<void> {
-    return await this.doRequest('PUT', `/api/v1/tasks/${id}/continue`);
+    await this.doRequest('PUT', `/api/v1/tasks/${id}/continue`);
   }
 
   /**
    * Pause all tasks
    */
   public async pauseAllTasks(): Promise<void> {
-    return await this.doRequest('PUT', '/api/v1/tasks/pause');
+    await this.doRequest('PUT', '/api/v1/tasks/pause');
   }
 
   /**
    * Continue all tasks
    */
   public async continueAllTasks(): Promise<void> {
-    return await this.doRequest('PUT', '/api/v1/tasks/continue');
+    await this.doRequest('PUT', '/api/v1/tasks/continue');
   }
 
   /**
    * Delete a task
-   * @param id
-   * @param force
+   * @param id - Task id
+   * @param force - Delete files
    */
   public async deleteTask(id: string, force = false): Promise<void> {
-    return await this.doRequest('DELETE', `/api/v1/tasks/${id}?force=${force}`);
+    await this.doRequest('DELETE', `/api/v1/tasks/${id}?force=${force}`);
   }
 
   private async doRequest<T>(
@@ -107,7 +119,7 @@ class Client {
       const queryParams = Object.entries(query)
         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
         .join('&');
-      url += '?' + queryParams;
+      url += `?${queryParams}`;
     }
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -117,18 +129,18 @@ class Client {
     }
     try {
       const resp = await fetch(url, {
-        method: method,
-        headers: headers,
+        method,
+        headers,
         body: data ? JSON.stringify(data) : undefined,
       });
       if (resp.status !== 200) {
         throw new ApiError(1000, await resp.text());
       }
-      const result = await resp.json();
+      const result = (await resp.json()) as Result<T>;
       if (result.code !== 0) {
         throw new ApiError(result.code, result.msg);
       }
-      return result.data as T;
+      return result.data;
     } catch (error) {
       throw new ApiError(1000, (error as Error).message);
     }

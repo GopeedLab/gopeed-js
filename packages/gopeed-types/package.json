@@ -15,7 +15,9 @@
   "scripts": {
     "build": "tsc src/index.ts"
   },
-  "keywords": [],
+  "keywords": [
+    "gopeed"
+  ],
   "author": "",
   "license": "ISC"
 }
