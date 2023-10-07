@@ -18,6 +18,9 @@
   "scripts": {
     "build": "tsc index.ts"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "gopeed",
     "gopeed-rest"

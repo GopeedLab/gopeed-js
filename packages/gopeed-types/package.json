@@ -15,6 +15,9 @@
   "scripts": {
     "build": "tsc src/index.ts"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "gopeed"
   ],
