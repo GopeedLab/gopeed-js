@@ -1,6 +1,6 @@
 {
   "name": "create-gopeed-ext",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "keywords": [
     "gopeed"
   ],
@@ -19,7 +19,8 @@
   },
   "files": [
     "index.js",
-    "createGopeedExt.js"
+    "createGopeedExt.js",
+    "templates"
   ],
   "bin": {
     "create-gopeed-ext": "./index.js"
