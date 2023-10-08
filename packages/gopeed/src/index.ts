@@ -1,4 +1,4 @@
-import Events from './extension';
+import { Events } from './extension';
 
 interface Gopeed {
   events: Events;

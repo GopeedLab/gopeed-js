@@ -1,8 +1,11 @@
 import { Request, Resource } from '@gopeed/types';
 
+type Settings = { [key: string]: unknown };
+
 interface OnResovleContext {
   req: Request;
   res: Resource;
+  settings: Settings;
 }
 
 interface Events {
@@ -10,4 +13,4 @@ interface Events {
   onResolve(handler: (ctx: OnResovleContext) => void): void;
 }
 
-export default Events;
+export type { Events };
