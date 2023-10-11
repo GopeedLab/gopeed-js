@@ -1,12 +1,14 @@
-import gopeed from "gopeed";
+import gopeed from 'gopeed';
 
 gopeed.events.onResolve((ctx) => {
   ctx.res = {
-    name: "gopeed",
+    name: 'gopeed',
     files: [
       {
-        name: "test.txt",
-        size: 1024,
+        name: 'test.txt',
+        req: {
+          url: 'https://example.com/test.txt',
+        },
       },
     ],
   };

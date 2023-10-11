@@ -103,7 +103,8 @@ function copyDir(src, dest) {
     if (entry.isDirectory()) {
       copyDir(srcPath, destPath);
     } else {
-      fs.copyFileSync(srcPath, destPath);
+      const fileDestPath = entry.name === 'gitignore' ? path.join(dest, '.gitignore') : destPath;
+      fs.copyFileSync(srcPath, fileDestPath);
     }
   });
 }
