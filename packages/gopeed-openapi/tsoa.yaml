@@ -1,0 +1,79 @@
+entryFile: src/app.ts
+noImplicitAdditionalProperties: throw-on-extras
+controllerPathGlobs:
+  - src/**/*Controller.ts
+spec:
+  outputDirectory: build
+  specVersion: 3
+  https: false
+  schemes:
+    - http
+  host: "127.0.0.1:9999"
+  version: v1
+  name: Introduction
+  description: |
+    This API is gopeed RESTful API document. You can use this API to manage download tasks.
+
+    # Response Format
+
+    All APIs return JSON format response. The response format is:
+
+    ```json
+    {
+      "code": 0,
+      "message": "",
+      "data": null
+    }
+    ```
+
+    - `code`: The response code, `0` means success, other values means error.
+    - `message`: The response message, if `code` != `0`, this field will contain error message.
+    - `data`: The response data, if `code` == `0`, this field will contain response data.
+
+    # Authentication
+
+    When configed API token in Gopeed, should pass `X-Api-Token` in request header.
+
+    # JavaScript Library
+
+    We provide a JavaScript library to help you use this API. You can install it by npm:
+
+    ```bash
+    npm install @gopeed/rest
+    ```
+
+    Then you can use it in your code:
+
+    ```js
+    import Client from "@gopeed/rest";
+
+    (async function(){
+      const client = new Client();
+      // Config host and API token
+      // const client = new Client({"host:":"http://api.xxx.com", "token": "your api token"});
+
+      // Create a http download task
+      await client.createTask({
+        "req":{
+          "url": "https://gopeed.com"
+        }
+      });
+
+      // Create a bt download task
+      await client.createTask({
+        "req":{
+          "url": "magnet:?xt=urn:btih:xxx"
+        }
+      });
+    });
+    ````
+  contact:
+    url: "https://gopeed.com"
+  securityDefinitions:
+    X-Api-Token:
+      type: apiKey
+      name: X-Api-Token
+      in: header
+      description: "Api Token for authentication"
+routes:
+  routesDir: build

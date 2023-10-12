@@ -1,4 +1,5 @@
 import type {
+  Request,
   CreateTaskWithRequest,
   CreateTaskWithResolveResult,
   ResolveResult,
@@ -65,7 +66,7 @@ class Client {
   public async getTasks(statuses: TaskStatus[] = []): Promise<Task[]> {
     return this.doRequest<Task[]>('GET', '/api/v1/tasks', {
       query: {
-        status: statuses.join(','),
+        status: statuses.map((status) => `status=${status.toString()}`).join('&'),
       },
     });
   }
@@ -147,5 +148,5 @@ class Client {
   }
 }
 
-export { Client };
+export { Client, ApiError };
 export default Client;

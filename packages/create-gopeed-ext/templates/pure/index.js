@@ -1,11 +1,13 @@
+import gopeed from 'gopeed';
+
 gopeed.events.onResolve((ctx) => {
   ctx.res = {
-    name: 'gopeed',
+    name: 'example',
     files: [
       {
-        name: 'test.txt',
+        name: 'index.html',
         req: {
-          url: 'https://example.com/test.txt',
+          url: 'https://example.com',
         },
       },
     ],

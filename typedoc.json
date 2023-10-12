@@ -1,0 +1,17 @@
+{
+  "entryPoints": [
+    "packages/*"
+  ],
+  "name": "Gopeed Library",
+  "entryPointStrategy": "packages",
+  "includeVersion": true,
+  "exclude": [
+    "./packages/create-gopeed-ext",
+    "./packages/gopeed-openapi"
+  ],
+  "plugin": [
+    "typedoc-plugin-missing-exports"
+  ],
+  // Potentially useful for debugging
+  // "logLevel": "Verbose"
+}

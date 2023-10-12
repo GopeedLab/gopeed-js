@@ -2,31 +2,37 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 
 export type HttpHeaders = { [key: string]: string };
 
 export interface HttpReqExtra {
-  method: HttpMethod;
-  headers: HttpHeaders;
-  body: string | undefined;
+  method?: HttpMethod;
+  headers?: HttpHeaders;
+  body?: string | undefined;
 }
 
 export interface BtReqExtra {
   /**
    * Tracker url list
    */
-  trackers: string[];
+  trackers?: string[];
 }
 
 export interface HttpOptExtra {
   /**
    * Concurrent connections
    */
-  connections: number;
+  connections?: number;
 }
 
 /**
  * Download request
+ * @example {
+ *  "url": "https://example.com/file.mp4"
+ * }
  */
 export interface Request {
+  /**
+   * Request url, support http(s) and magnet and local torrent file
+   */
   url: string;
-  extra: HttpReqExtra | BtReqExtra;
+  extra?: HttpReqExtra | BtReqExtra;
 }
 
 export interface FileInfo {
@@ -34,7 +40,10 @@ export interface FileInfo {
   path: string;
   size: number;
 
-  req: Request;
+  /**
+   * Specify the request for this file
+   */
+  req?: Request;
 }
 
 /**
@@ -45,7 +54,7 @@ export interface Resource {
   size: number;
   range: boolean;
   files: FileInfo[];
-  hash: string;
+  hash?: string;
 }
 
 export interface ResolveResult {
@@ -60,16 +69,16 @@ export interface Options {
   /**
    * Specify the file name, if not set, use the name from resource
    */
-  name: string;
+  name?: string;
   /**
    * Specify the path to save the file, if not set, use the current directory
    */
-  path: string;
+  path?: string;
   /**
    * Select the index of the specified file, if not set, download all files
    */
-  selectFiles: number[];
-  extra: HttpOptExtra;
+  selectFiles?: number[];
+  extra?: HttpOptExtra;
 }
 
 export type TaskStatus = 'ready' | 'running' | 'pause' | 'wait' | 'error' | 'done';
@@ -91,11 +100,19 @@ export interface TaskProgress {
 
 export interface Task {
   id: string;
+  /**
+   * Task metadata
+   */
   meta: {
     req: Request;
     res: Resource;
     opt: Options;
   };
+  /**
+   * Task status
+   * @example "ready"
+   * @example "running"
+   */
   status: TaskStatus;
   progress: TaskProgress;
   /**
@@ -103,18 +120,30 @@ export interface Task {
    */
   size: number;
   /**
-   * ISO 8601 format
+   * Task created time, ISO 8601 format
    * @example 2023-03-04T19:11:01.8468886+08:00
    */
   createdAt: string;
 }
 
 export interface CreateTaskWithResolveResult {
-  id: string;
-  opts: Options;
+  /**
+   * Resolved id, from resolved result
+   */
+  rid: string;
+  /**
+   * Download options
+   */
+  opt?: Options;
 }
 
 export interface CreateTaskWithRequest {
+  /**
+   * Download request
+   */
   req: Request;
-  opts: Options;
+  /**
+   * Download options
+   */
+  opt?: Options;
 }

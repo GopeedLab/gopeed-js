@@ -1,0 +1,593 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"HttpMethod": {
+				"type": "string",
+				"enum": [
+					"GET",
+					"POST",
+					"PUT",
+					"DELETE",
+					"PATCH",
+					"HEAD",
+					"OPTIONS",
+					"CONNECT",
+					"TRACE"
+				]
+			},
+			"HttpHeaders": {
+				"properties": {},
+				"additionalProperties": {
+					"type": "string"
+				},
+				"type": "object"
+			},
+			"HttpReqExtra": {
+				"properties": {
+					"method": {
+						"$ref": "#/components/schemas/HttpMethod"
+					},
+					"headers": {
+						"$ref": "#/components/schemas/HttpHeaders"
+					},
+					"body": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BtReqExtra": {
+				"properties": {
+					"trackers": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Tracker url list"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Request": {
+				"description": "Download request",
+				"properties": {
+					"url": {
+						"type": "string",
+						"description": "Request url, support http(s) and magnet and local torrent file"
+					},
+					"extra": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/HttpReqExtra"
+							},
+							{
+								"$ref": "#/components/schemas/BtReqExtra"
+							}
+						]
+					}
+				},
+				"required": [
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"url": "https://example.com/file.mp4"
+				}
+			},
+			"FileInfo": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"path": {
+						"type": "string"
+					},
+					"size": {
+						"type": "number",
+						"format": "double"
+					},
+					"req": {
+						"$ref": "#/components/schemas/Request",
+						"description": "Specify the request for this file"
+					}
+				},
+				"required": [
+					"name",
+					"path",
+					"size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Resource": {
+				"description": "Resource info resloved from request, can contain multiple files",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"size": {
+						"type": "number",
+						"format": "double"
+					},
+					"range": {
+						"type": "boolean"
+					},
+					"files": {
+						"items": {
+							"$ref": "#/components/schemas/FileInfo"
+						},
+						"type": "array"
+					},
+					"hash": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"size",
+					"range",
+					"files"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResolveResult": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"res": {
+						"$ref": "#/components/schemas/Resource"
+					}
+				},
+				"required": [
+					"id",
+					"res"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"HttpOptExtra": {
+				"properties": {
+					"connections": {
+						"type": "number",
+						"format": "double",
+						"description": "Concurrent connections"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Options": {
+				"description": "Download options",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "Specify the file name, if not set, use the name from resource"
+					},
+					"path": {
+						"type": "string",
+						"description": "Specify the path to save the file, if not set, use the current directory"
+					},
+					"selectFiles": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array",
+						"description": "Select the index of the specified file, if not set, download all files"
+					},
+					"extra": {
+						"$ref": "#/components/schemas/HttpOptExtra"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTaskWithResolveResult": {
+				"properties": {
+					"rid": {
+						"type": "string",
+						"description": "Resolved result id"
+					},
+					"opts": {
+						"$ref": "#/components/schemas/Options",
+						"description": "Download options"
+					}
+				},
+				"required": [
+					"rid"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTaskWithRequest": {
+				"properties": {
+					"req": {
+						"$ref": "#/components/schemas/Request",
+						"description": "Download request"
+					},
+					"opts": {
+						"$ref": "#/components/schemas/Options",
+						"description": "Download options"
+					}
+				},
+				"required": [
+					"req"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TaskStatus": {
+				"type": "string",
+				"enum": [
+					"ready",
+					"running",
+					"pause",
+					"wait",
+					"error",
+					"done"
+				]
+			},
+			"TaskProgress": {
+				"properties": {
+					"used": {
+						"type": "number",
+						"format": "double",
+						"description": "Download used time(ns)"
+					},
+					"speed": {
+						"type": "number",
+						"format": "double",
+						"description": "Download speed(byte/s)"
+					},
+					"downloaded": {
+						"type": "number",
+						"format": "double",
+						"description": "Downloaded size(byte)"
+					}
+				},
+				"required": [
+					"used",
+					"speed",
+					"downloaded"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Task": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"meta": {
+						"properties": {
+							"opt": {
+								"$ref": "#/components/schemas/Options"
+							},
+							"res": {
+								"$ref": "#/components/schemas/Resource"
+							},
+							"req": {
+								"$ref": "#/components/schemas/Request"
+							}
+						},
+						"required": [
+							"opt",
+							"res",
+							"req"
+						],
+						"type": "object"
+					},
+					"status": {
+						"$ref": "#/components/schemas/TaskStatus"
+					},
+					"progress": {
+						"$ref": "#/components/schemas/TaskProgress"
+					},
+					"size": {
+						"type": "number",
+						"format": "double",
+						"description": "Task total size(byte)"
+					},
+					"createdAt": {
+						"type": "string",
+						"description": "ISO 8601 format"
+					}
+				},
+				"required": [
+					"id",
+					"meta",
+					"status",
+					"progress",
+					"size",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"X-Api-Token": {
+				"type": "apiKey",
+				"name": "X-Api-Token",
+				"in": "header",
+				"description": "Api Token for authentication"
+			}
+		}
+	},
+	"info": {
+		"title": "Introduction",
+		"version": "v1",
+		"description": "This API is gopeed RESTful API document. You can use this API to manage download tasks.\n\n# Response Format\n\nAll APIs return JSON format response. The response format is:\n\n```json\n{\n  \"code\": 0,\n  \"message\": \"\",\n  \"data\": null\n}\n```\n\n- `code`: The response code, `0` means success, other values means error.\n- `message`: The response message, if `code` != `0`, this field will contain error message.\n- `data`: The response data, if `code` == `0`, this field will contain response data.\n\n# Authentication\n\nWhen configed API token in Gopeed, should pass `X-Api-Token` in request header.\n\n# JavaScript Library\n\nWe provide a JavaScript library to help you use this API. You can install it by npm:\n\n```bash\nnpm install @gopeed/rest\n```\n\nThen you can use it in your code:\n\n```js\nimport Client from \"@gopeed/rest\";\n\n(async function(){\n  const client = new Client();\n  // Config host and API token\n  // const client = new Client({\"host:\":\"http://api.xxx.com\", \"token\": \"your api token\"});\n\n  // Create a http download task\n  await client.createTask({\n    \"req\":{\n      \"url\": \"https://gopeed.com\"\n    }\n  });\n\n  // Create a bt download task\n  await client.createTask({\n    \"req\":{\n      \"url\": \"magnet:?xt=urn:btih:xxx\"\n    }\n  });\n});\n````\n",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {
+			"url": "https://gopeed.com"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/api/v1/resolve": {
+			"post": {
+				"operationId": "Resolve",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResolveResult"
+								}
+							}
+						}
+					}
+				},
+				"description": "Resolve resource info from request, can contain multiple files",
+				"summary": "Resolve a request",
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Request"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/tasks": {
+			"post": {
+				"operationId": "CreateTask",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a download task, there has two ways to create a task:\n1. Create a task with resolved result, you can get resolved result from `/api/v1/resolve`\n2. Create a task directly with request",
+				"summary": "Create a task",
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"anyOf": [
+									{
+										"$ref": "#/components/schemas/CreateTaskWithResolveResult"
+									},
+									{
+										"$ref": "#/components/schemas/CreateTaskWithRequest"
+									}
+								]
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetTasks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Task"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get task list",
+				"summary": "Get task list",
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Filter by task status, can be multiple",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/TaskStatus"
+							}
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/tasks/{id}/pause": {
+			"put": {
+				"operationId": "PauseTask",
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"description": "Pause a task",
+				"summary": "Pause a task",
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/tasks/{id}/continue": {
+			"put": {
+				"operationId": "ContinueTask",
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"description": "Continue a task",
+				"summary": "Continue a task",
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/tasks/pause": {
+			"put": {
+				"operationId": "PauseAllTasks",
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"description": "Pause all tasks",
+				"summary": "Pause all tasks",
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/tasks/continue": {
+			"put": {
+				"operationId": "ContinueAllTasks",
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"description": "Continue all tasks",
+				"summary": "Continue all tasks",
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/tasks/{id}": {
+			"delete": {
+				"operationId": "DeleteTask",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete a task",
+				"summary": "Delete a task",
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "- Delete files",
+						"in": "query",
+						"name": "force",
+						"required": false,
+						"schema": {
+							"default": false,
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "http://127.0.0.1:9999/"
+		}
+	]
+}

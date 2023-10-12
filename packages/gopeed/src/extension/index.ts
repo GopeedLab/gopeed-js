@@ -13,4 +13,4 @@ interface Events {
   onResolve(handler: (ctx: OnResovleContext) => void): void;
 }
 
-export type { Events };
+export { Events };
