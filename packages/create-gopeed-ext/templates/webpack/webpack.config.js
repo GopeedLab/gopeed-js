@@ -1,20 +1,20 @@
-import path from "path";
-import { fileURLToPath } from "url";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __dirname = fileURLToPath(import.meta.url);
 
 export default {
-  entry: "./src/index.js",
+  entry: './src/index.js',
   output: {
-    filename: "index.js",
-    path: path.resolve(__dirname, "../dist"),
+    filename: 'index.js',
+    path: path.resolve(__dirname, '../dist'),
   },
   module: {
     rules: [
       {
         test: /\.m?js$/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
         },
       },
     ],
