@@ -1,12 +1,36 @@
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE';
 export type HttpHeaders = { [key: string]: string };
 
+/**
+ * HTTP request extra options
+ * @example {
+ *  "method": "GET",
+ *  "headers": {
+ *    "Cookie": "xxx"
+ *  }
+ * }
+ */
 export interface HttpReqExtra {
+  /**
+   * HTTP request method
+   */
   method?: HttpMethod;
+  /**
+   * HTTP request headers
+   */
   headers?: HttpHeaders;
+  /**
+   * HTTP request body
+   */
   body?: string | undefined;
 }
 
+/**
+ * Bt request extra options
+ * @example {
+ *  "trackers": ["udp://tracker.opentrackr.org:1337/announce"]
+ * }
+ */
 export interface BtReqExtra {
   /**
    * Tracker url list
@@ -14,6 +38,12 @@ export interface BtReqExtra {
   trackers?: string[];
 }
 
+/**
+ * HTTP download extra options
+ * @example {
+ *  "connections": 32
+ * }
+ */
 export interface HttpOptExtra {
   /**
    * Concurrent connections
@@ -32,12 +62,32 @@ export interface Request {
    * Request url, support http(s) and magnet and local torrent file
    */
   url: string;
+  /**
+   * Extra request options
+   */
   extra?: HttpReqExtra | BtReqExtra;
 }
 
+/**
+ * File info
+ * @example {
+ *  "name": "file.mp4",
+ *  "path": "",
+ *  "size": 1024
+ * }
+ */
 export interface FileInfo {
+  /**
+   * File name
+   */
   name: string;
+  /**
+   * File path, relative to the resource, e.g. "path/to"
+   */
   path: string;
+  /**
+   * File size(byte)
+   */
   size: number;
 
   /**
@@ -50,9 +100,21 @@ export interface FileInfo {
  * Resource info resloved from request, can contain multiple files
  */
 export interface Resource {
+  /**
+   * When name is not blank, it means that the resource is a folder resource, and the name is the folder name
+   */
   name: string;
+  /**
+   * Resource total size(byte)
+   */
   size: number;
+  /**
+   * Whether the resource supports breakpoint continuation
+   */
   range: boolean;
+  /**
+   * Resource files list, only when the resource is a folder resource will contain multiple files, otherwise it will only contain one file
+   */
   files: FileInfo[];
   hash?: string;
 }
@@ -78,6 +140,9 @@ export interface Options {
    * Select the index of the specified file, if not set, download all files
    */
   selectFiles?: number[];
+  /**
+   * Download extra options
+   */
   extra?: HttpOptExtra;
 }
 
@@ -99,6 +164,9 @@ export interface TaskProgress {
 }
 
 export interface Task {
+  /**
+   * Task id
+   */
   id: string;
   /**
    * Task metadata
@@ -114,6 +182,9 @@ export interface Task {
    * @example "running"
    */
   status: TaskStatus;
+  /**
+   * Task progress
+   */
   progress: TaskProgress;
   /**
    * Task total size(byte)
