@@ -30,6 +30,4 @@ version-resolver:
       - 'patch'
   default: patch
 template: |
-  ## Changes
-
-  $CHANGES
+  **Full Changelog**: https://github.com/GopeedLab/gopeed-js/compare/$PREVIOUS_TAG...v$NEXT_PATCH_VERSION
