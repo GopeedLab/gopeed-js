@@ -1,7 +1,8 @@
-import { Events } from './extension';
+import { Events, Logger } from './extension';
 
 interface Gopeed {
   events: Events;
+  logger: Logger;
 }
 
 declare const gopeed: Gopeed;

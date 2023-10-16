@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unused-vars */
 import { Request, Resource } from '@gopeed/types';
 
 type Settings = { [key: string]: unknown };
@@ -9,8 +11,16 @@ interface OnResovleContext {
 }
 
 interface Events {
-  // eslint-disable-next-line no-unused-vars
   onResolve(handler: (ctx: OnResovleContext) => void): void;
 }
 
-export { Events };
+console.log();
+
+interface Logger {
+  debug(message?: any, ...optionalParams: any[]): void;
+  info(message?: any, ...optionalParams: any[]): void;
+  warn(message?: any, ...optionalParams: any[]): void;
+  error(message?: any, ...optionalParams: any[]): void;
+}
+
+export { Events, Logger };
