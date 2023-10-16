@@ -12,7 +12,7 @@ spec:
   version: v1
   name: Introduction
   description: |
-    This API is gopeed RESTful API document. You can use this API to manage download tasks.
+    This is gopeed RESTful API document. You can use this API to manage download tasks.
 
     # Response Format
 
