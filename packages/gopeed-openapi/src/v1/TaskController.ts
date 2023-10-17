@@ -78,10 +78,11 @@ export class UsersController extends Controller {
    * Delete a task
    * @summary Delete a task
    * @param id - Task id
-   * @param force - Delete files
+   * @param force - Also delete files
    */
   @Security('X-Api-Token')
   @Delete('{id}')
+  @SuccessResponse(200)
   public async deleteTask(@Path() id: string, @Query() force = false): Promise<void> {
     return;
   }
