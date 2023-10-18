@@ -1,11 +1,11 @@
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE';
-export type HttpHeaders = { [key: string]: string };
+export type HttpHeader = { [key: string]: string };
 
 /**
  * HTTP request extra options
  * @example {
  *  "method": "GET",
- *  "headers": {
+ *  "header": {
  *    "Cookie": "xxx"
  *  }
  * }
@@ -16,9 +16,9 @@ export interface HttpReqExtra {
    */
   method?: HttpMethod;
   /**
-   * HTTP request headers
+   * HTTP request header
    */
-  headers?: HttpHeaders;
+  header?: HttpHeader;
   /**
    * HTTP request body
    */
