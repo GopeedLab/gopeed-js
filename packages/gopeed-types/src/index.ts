@@ -66,6 +66,10 @@ export interface Request {
    * Extra request options
    */
   extra?: HttpReqExtra | BtReqExtra;
+  /**
+   * Request labels
+   */
+  labels?: { [key: string]: string };
 }
 
 /**
