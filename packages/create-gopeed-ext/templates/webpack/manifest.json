@@ -12,9 +12,9 @@
   "scripts": [
     {
       "event": "onResolve",
-      "matches": [
-        "*://github.com/*"
-      ],
+      "match": {
+        "urls": ["*://github.com/*"]
+      },
       "entry": "dist/index.js"
     }
   ],
