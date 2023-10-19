@@ -12,8 +12,8 @@ interface OnStartContext {
 }
 
 interface Events {
-  onResolve: (context: OnResovleContext) => void;
-  onStart: (context: OnStartContext) => void;
+  onResolve(handler: (ctx: OnResovleContext) => void): void;
+  onStart(handler: (ctx: OnStartContext) => void): void;
 }
 
 export { Events };
