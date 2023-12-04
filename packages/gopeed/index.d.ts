@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Events } from './event';
+import { Events } from './types/events';
 
 interface Info {
   identity: string;
@@ -11,13 +10,15 @@ interface Info {
 }
 
 interface Logger {
-  debug(message?: any, ...optionalParams: any[]): void;
-  info(message?: any, ...optionalParams: any[]): void;
-  warn(message?: any, ...optionalParams: any[]): void;
-  error(message?: any, ...optionalParams: any[]): void;
+  debug(message?: unknown, ...optionalParams: unknown[]): void;
+  info(message?: unknown, ...optionalParams: unknown[]): void;
+  warn(message?: unknown, ...optionalParams: unknown[]): void;
+  error(message?: unknown, ...optionalParams: unknown[]): void;
 }
 
-type Settings = { [key: string]: unknown };
+type Settings = {
+  [key: string]: unknown;
+};
 
 interface Storage {
   /**
@@ -69,6 +70,11 @@ interface Gopeed {
   storage: Storage;
 }
 
+/**
+ * Global gopeed extension instance
+ */
 declare global {
   const gopeed: Gopeed;
 }
+
+export {};
