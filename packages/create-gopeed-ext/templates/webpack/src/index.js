@@ -1,5 +1,3 @@
-import gopeed from 'gopeed';
-
 gopeed.events.onResolve((ctx) => {
   ctx.res = {
     name: 'example',

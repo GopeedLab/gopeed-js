@@ -69,6 +69,6 @@ interface Gopeed {
   storage: Storage;
 }
 
-declare const gopeed: Gopeed;
-
-export default gopeed;
+declare global {
+  const gopeed: Gopeed;
+}
