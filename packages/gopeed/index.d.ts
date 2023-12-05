@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Events } from './types/events';
 
-interface Info {
+export interface Info {
   identity: string;
   name: string;
   author: string;
@@ -9,18 +9,18 @@ interface Info {
   version: string;
 }
 
-interface Logger {
+export interface Logger {
   debug(message?: unknown, ...optionalParams: unknown[]): void;
   info(message?: unknown, ...optionalParams: unknown[]): void;
   warn(message?: unknown, ...optionalParams: unknown[]): void;
   error(message?: unknown, ...optionalParams: unknown[]): void;
 }
 
-type Settings = {
+export type Settings = {
   [key: string]: unknown;
 };
 
-interface Storage {
+export interface Storage {
   /**
    * Returns the current value associated with the given key, or null if the given key does not exist.
    * @param key
@@ -47,7 +47,7 @@ interface Storage {
   keys(): string[];
 }
 
-interface Gopeed {
+export interface Gopeed {
   /**
    * Register event handlers
    */
@@ -77,4 +77,5 @@ declare global {
   const gopeed: Gopeed;
 }
 
+export * from './types/events';
 export {};

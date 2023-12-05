@@ -1,18 +1,19 @@
 /* eslint-disable no-unused-vars */
 import { Request, Resource, Task } from '@gopeed/types';
 
-interface OnResovleContext {
+export interface OnResovleContext {
   req: Request;
   res: Resource;
 }
 
-interface OnStartContext {
+export interface OnStartContext {
   task: Task;
 }
 
-interface Events {
-  onResolve(handler: (ctx: OnResovleContext) => void): void;
-  onStart(handler: (ctx: OnStartContext) => void): void;
-}
+export type EventOnResolve = (ctx: OnResovleContext) => void;
+export type EventOnStart = (ctx: OnStartContext) => void;
 
-export { Events };
+export interface Events {
+  onResolve: EventOnResolve;
+  onStart: EventOnStart;
+}
