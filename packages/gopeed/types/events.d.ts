@@ -10,8 +10,8 @@ export interface OnStartContext {
   task: Task;
 }
 
-export type EventOnResolve = (ctx: OnResovleContext) => void;
-export type EventOnStart = (ctx: OnStartContext) => void;
+export type EventOnResolve = (ctx: OnResovleContext) => Promise<void> | void;
+export type EventOnStart = (ctx: OnStartContext) => Promise<void> | void;
 
 export interface Events {
   onResolve: (handler: EventOnResolve) => void;
