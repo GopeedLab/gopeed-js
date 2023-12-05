@@ -14,6 +14,6 @@ export type EventOnResolve = (ctx: OnResovleContext) => void;
 export type EventOnStart = (ctx: OnStartContext) => void;
 
 export interface Events {
-  onResolve: EventOnResolve;
-  onStart: EventOnStart;
+  onResolve: (handler: EventOnResolve) => void;
+  onStart: (handler: EventOnStart) => void;
 }
