@@ -70,11 +70,19 @@ export interface Gopeed {
   storage: Storage;
 }
 
+export type MessageError = Error;
+
+export interface MessageErrorConstructor {
+  new (message?: string): MessageError;
+  (message?: string): MessageError;
+}
+
 /**
  * Global gopeed extension instance
  */
 declare global {
   const gopeed: Gopeed;
+  const MessageError: MessageErrorConstructor;
 }
 
 export * from './types/events';

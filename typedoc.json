@@ -4,7 +4,7 @@
   ],
   "name": "Gopeed Library",
   "entryPointStrategy": "packages",
-  "includeVersion": true,
+  "includeVersion": false,
   "exclude": [
     "./packages/create-gopeed-ext",
     "./packages/gopeed-openapi"
