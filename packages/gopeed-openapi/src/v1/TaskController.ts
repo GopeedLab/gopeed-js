@@ -86,4 +86,17 @@ export class UsersController extends Controller {
   public async deleteTask(@Path() id: string, @Query() force = false): Promise<void> {
     return;
   }
+
+  /**
+   * Delete tasks
+   * @summary Delete tasks
+   * @param status - Filter by task status, can be multiple
+   * @param force - Also delete files
+   */
+  @Security('X-Api-Token')
+  @Delete()
+  @SuccessResponse(200)
+  public async deleteTasks(@Query() status: TaskStatus[] = [], @Query() force = false): Promise<void> {
+    return;
+  }
 }

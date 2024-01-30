@@ -110,6 +110,20 @@ class Client {
     await this.doRequest('DELETE', `/api/v1/tasks/${id}?force=${force}`);
   }
 
+  /**
+   * Delete tasks
+   * @param statuses - Filter by task status
+   * @param force - Delete files
+   */
+  public async deleteTasks(statuses: TaskStatus[] = [], force = false): Promise<void> {
+    await this.doRequest('DELETE', '/api/v1/tasks', {
+      query: {
+        status: statuses.map((status) => `status=${status.toString()}`).join('&'),
+        force: force,
+      },
+    });
+  }
+
   private async doRequest<T>(
     method: string,
     path: string,
