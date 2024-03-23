@@ -41,7 +41,7 @@ class Client {
    * @param request - The request to create a new download task
    * @returns
    */
-  public async resole(request: Request): Promise<ResolveResult> {
+  public async resolve(request: Request): Promise<ResolveResult> {
     return this.doRequest<ResolveResult>('POST', '/api/v1/resolve', {
       data: request,
     });
