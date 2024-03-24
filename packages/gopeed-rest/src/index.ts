@@ -59,6 +59,15 @@ class Client {
   }
 
   /**
+   * Get task info
+   * @param id - Task id
+   * @returns
+   */
+  public async getTask(id: string): Promise<Task> {
+    return this.doRequest<Task>('GET', `/api/v1/tasks/${id}`);
+  }
+
+  /**
    * Get task list
    * @param statuses - Filter by task status
    * @returns
