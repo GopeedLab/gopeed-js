@@ -18,6 +18,17 @@ export class UsersController extends Controller {
   }
 
   /**
+   * Get task info
+   * @param id - Task id
+   * @returns
+   */
+  @Security('X-Api-Token')
+  @Get('{id}')
+  public async getTask(@Path() id: string): Promise<Task> {
+    return null as unknown as Task;
+  }
+
+  /**
    * Get task list
    * @summary Get task list
    * @param status - Filter by task status, can be multiple
