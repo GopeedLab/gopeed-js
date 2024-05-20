@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { CreateTaskWithRequest, CreateTaskWithResolveResult, Task, TaskStatus } from '@gopeed/types';
+import { CreateTaskWithRequest, CreateTaskWithResolveResult, Task, TaskStatus, CreateTaskBatch } from '@gopeed/types';
 import { Body, Controller, Delete, Get, Path, Post, Put, Query, Route, Security, SuccessResponse } from 'tsoa';
 
 @Route('/api/v1/tasks')
@@ -15,6 +15,16 @@ export class UsersController extends Controller {
   @Post()
   public async createTask(@Body() req: CreateTaskWithResolveResult | CreateTaskWithRequest): Promise<string> {
     return null as unknown as string;
+  }
+
+  /**
+   * Create a batch of download tasks
+   * @summary Create a batch of tasks
+   */
+  @Security('X-Api-Token')
+  @Post('/batch')
+  public async createTaskBatch(@Body() req: CreateTaskBatch): Promise<string[]> {
+    return null as unknown as string[];
   }
 
   /**

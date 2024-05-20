@@ -2,6 +2,32 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 
 export type HttpHeader = { [key: string]: string };
 
 /**
+ * Server info
+ */
+export interface ServerInfo {
+  /**
+   * Application version
+   */
+  version: string;
+  /**
+   * Go version
+   */
+  runtime: string;
+  /**
+   * OS version
+   */
+  os: string;
+  /**
+   * CPU architecture
+   */
+  arch: string;
+  /**
+   * Is running in docker
+   */
+  inDocker?: boolean;
+}
+
+/**
  * HTTP request extra options
  * @example {
  *  "method": "GET",
@@ -217,6 +243,17 @@ export interface CreateTaskWithRequest {
    * Download request
    */
   req: Request;
+  /**
+   * Download options
+   */
+  opt?: Options;
+}
+
+export interface CreateTaskBatch {
+  /**
+   * Download request list
+   */
+  reqs: Request[];
   /**
    * Download options
    */
