@@ -222,9 +222,14 @@ export interface Task {
   size: number;
   /**
    * Task created time, ISO 8601 format
-   * @example 2023-03-04T19:11:01.8468886+08:00
+   * @example "2023-03-04T19:11:01.8468886+08:00"
    */
   createdAt: string;
+  /**
+   * Task updated time, ISO 8601 format
+   * @example "2023-03-04T19:11:01.8468886+08:00"
+   */
+  updatedAt: string;
 }
 
 export interface CreateTaskWithResolveResult {
