@@ -82,6 +82,8 @@ export interface BtReqExtra {
   trackers?: string[];
 }
 
+export type ReqExtra = HttpReqExtra | BtReqExtra;
+
 /**
  * HTTP download extra options
  * @example {
@@ -93,7 +95,13 @@ export interface HttpOptExtra {
    * Concurrent connections
    */
   connections?: number;
+  /**
+   * When task download complete, and it is a .torrent file, it will be auto create a new task for the torrent file
+   */
+  autoTorrent?: boolean;
 }
+
+export type OptExtra = HttpOptExtra;
 
 /**
  * Download request
@@ -109,7 +117,7 @@ export interface Request {
   /**
    * Extra request options
    */
-  extra?: HttpReqExtra | BtReqExtra;
+  extra?: ReqExtra;
   /**
    * Request labels
    */
@@ -190,7 +198,7 @@ export interface Options {
   /**
    * Download extra options
    */
-  extra?: HttpOptExtra;
+  extra?: OptExtra;
 }
 
 export type Protocol = 'http' | 'bt';
@@ -294,6 +302,8 @@ export interface TaskBtStats {
    */
   seedTime: number;
 }
+
+export type TaskStats = TaskBtStats;
 
 export interface CreateTaskWithResolveResult {
   /**

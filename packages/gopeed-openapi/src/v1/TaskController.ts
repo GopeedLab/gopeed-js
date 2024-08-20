@@ -7,6 +7,7 @@ import {
   TaskStatus,
   CreateTaskBatch,
   Result,
+  TaskStats,
 } from '@gopeed/types';
 import { Body, Controller, Delete, Get, Path, Post, Put, Query, Route, Security, SuccessResponse } from 'tsoa';
 
@@ -57,14 +58,14 @@ export class UsersController extends Controller {
   }
 
   /**
-   * Get task download status detail info
+   * Get task stats
    * @param id - Task id
    * @returns
    */
   @Security('X-Api-Token')
   @Get('{id}/stats')
-  public async stats(@Path() id: string): Promise<Result<Task>> {
-    return null as unknown as Result<Task>;
+  public async stats(@Path() id: string): Promise<Result<TaskStats>> {
+    return null as unknown as Result<TaskStats>;
   }
 
   /**

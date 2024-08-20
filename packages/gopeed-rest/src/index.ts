@@ -1,11 +1,14 @@
 import type {
   Result,
   Request,
+  ResolveResult,
   CreateTaskWithRequest,
   CreateTaskWithResolveResult,
-  ResolveResult,
+  CreateTaskBatch,
   Task,
   TaskStatus,
+  TaskBtStats,
+  TaskStats,
 } from '@gopeed/types';
 
 interface ClientOptions {
@@ -54,6 +57,17 @@ class Client {
   }
 
   /**
+   * Create a batch of download tasks
+   * @param request - The request to create a batch of download tasks
+   * @returns
+   */
+  public async createTaskBatch(request: CreateTaskBatch): Promise<string[]> {
+    return this.doRequest<string[]>('POST', '/api/v1/tasks/batch', {
+      data: request,
+    });
+  }
+
+  /**
    * Get task info
    * @param id - Task id
    * @returns
@@ -73,6 +87,15 @@ class Client {
         status: statuses.map((status) => `status=${status.toString()}`).join('&'),
       },
     });
+  }
+
+  /**
+   * Get task stats
+   * @param id - Task id
+   * @returns
+   */
+  public async getTaskStats(id: string): Promise<TaskStats> {
+    return this.doRequest<TaskBtStats>('GET', `/api/v1/tasks/${id}/stats`);
   }
 
   /**
