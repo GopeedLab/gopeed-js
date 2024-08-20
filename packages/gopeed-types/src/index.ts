@@ -2,6 +2,24 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 
 export type HttpHeader = { [key: string]: string };
 
 /**
+ * REST API result
+ */
+export interface Result<T> {
+  /**
+   * The response code, `0` means success, other values means error.
+   */
+  code: number;
+  /**
+   * The response message, if `code` != `0`, this field will contain error message.
+   */
+  msg: string;
+  /**
+   * The response data, if `code` == `0`, this field will contain response data.
+   */
+  data: T;
+}
+
+/**
  * Server info
  */
 export interface ServerInfo {
@@ -119,7 +137,6 @@ export interface FileInfo {
    * File size(byte)
    */
   size: number;
-
   /**
    * Specify the request for this file
    */
@@ -176,6 +193,8 @@ export interface Options {
   extra?: HttpOptExtra;
 }
 
+export type Protocol = 'http' | 'bt';
+
 export type TaskStatus = 'ready' | 'running' | 'pause' | 'wait' | 'error' | 'done';
 
 export interface TaskProgress {
@@ -191,6 +210,14 @@ export interface TaskProgress {
    * Downloaded size(byte)
    */
   downloaded: number;
+  /**
+   * Uploaded speed(bytes/s)
+   */
+  uploadSpeed: number;
+  /**
+   * Uploaded size(bytes)
+   */
+  uploaded: number;
 }
 
 export interface Task {
@@ -198,6 +225,10 @@ export interface Task {
    * Task id
    */
   id: string;
+  /**
+   * Protocol type
+   */
+  protocol: Protocol;
   /**
    * Task metadata
    */
@@ -212,6 +243,10 @@ export interface Task {
    * @example "running"
    */
   status: TaskStatus;
+  /**
+   * Task is uploading
+   */
+  uploading: boolean;
   /**
    * Task progress
    */
@@ -230,6 +265,34 @@ export interface Task {
    * @example "2023-03-04T19:11:01.8468886+08:00"
    */
   updatedAt: string;
+}
+
+export interface TaskBtStats {
+  /**
+   * Total peers
+   */
+  totalPeers: number;
+  /**
+   * Active peers
+   */
+  activePeers: number;
+  /**
+   * Connected seeders
+   */
+  connectedSeeders: number;
+  /**
+   * Total seed bytes
+   */
+  seedBytes: number;
+  /**
+   * Seed ratio
+   * @example 0.1
+   */
+  seedRatio: number;
+  /**
+   * Total seed time(s)
+   */
+  seedTime: number;
 }
 
 export interface CreateTaskWithResolveResult {

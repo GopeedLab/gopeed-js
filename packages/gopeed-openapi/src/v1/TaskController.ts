@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { CreateTaskWithRequest, CreateTaskWithResolveResult, Task, TaskStatus, CreateTaskBatch } from '@gopeed/types';
+import {
+  CreateTaskWithRequest,
+  CreateTaskWithResolveResult,
+  Task,
+  TaskStatus,
+  CreateTaskBatch,
+  Result,
+} from '@gopeed/types';
 import { Body, Controller, Delete, Get, Path, Post, Put, Query, Route, Security, SuccessResponse } from 'tsoa';
 
 @Route('/api/v1/tasks')
@@ -13,8 +20,8 @@ export class UsersController extends Controller {
    */
   @Security('X-Api-Token')
   @Post()
-  public async createTask(@Body() req: CreateTaskWithResolveResult | CreateTaskWithRequest): Promise<string> {
-    return null as unknown as string;
+  public async createTask(@Body() req: CreateTaskWithResolveResult | CreateTaskWithRequest): Promise<Result<string>> {
+    return null as unknown as Result<string>;
   }
 
   /**
@@ -23,8 +30,8 @@ export class UsersController extends Controller {
    */
   @Security('X-Api-Token')
   @Post('/batch')
-  public async createTaskBatch(@Body() req: CreateTaskBatch): Promise<string[]> {
-    return null as unknown as string[];
+  public async createTaskBatch(@Body() req: CreateTaskBatch): Promise<Result<string[]>> {
+    return null as unknown as Result<string[]>;
   }
 
   /**
@@ -34,8 +41,8 @@ export class UsersController extends Controller {
    */
   @Security('X-Api-Token')
   @Get('{id}')
-  public async getTask(@Path() id: string): Promise<Task> {
-    return null as unknown as Task;
+  public async getTask(@Path() id: string): Promise<Result<Task>> {
+    return null as unknown as Result<Task>;
   }
 
   /**
@@ -45,8 +52,19 @@ export class UsersController extends Controller {
    */
   @Security('X-Api-Token')
   @Get()
-  public async getTasks(@Query() status: TaskStatus[] = []): Promise<Task[]> {
-    return null as unknown as Task[];
+  public async getTasks(@Query() status: TaskStatus[] = []): Promise<Result<Task[]>> {
+    return null as unknown as Result<Task[]>;
+  }
+
+  /**
+   * Get task download status detail info
+   * @param id - Task id
+   * @returns
+   */
+  @Security('X-Api-Token')
+  @Get('{id}/stats')
+  public async stats(@Path() id: string): Promise<Result<Task>> {
+    return null as unknown as Result<Task>;
   }
 
   /**
@@ -57,8 +75,8 @@ export class UsersController extends Controller {
   @Security('X-Api-Token')
   @Put('{id}/pause')
   @SuccessResponse(200)
-  public async pauseTask(@Path() id: string): Promise<void> {
-    return null as unknown as void;
+  public async pauseTask(@Path() id: string): Promise<Result<void>> {
+    return null as unknown as Result<void>;
   }
 
   /**
@@ -69,8 +87,8 @@ export class UsersController extends Controller {
   @Security('X-Api-Token')
   @Put('{id}/continue')
   @SuccessResponse(200)
-  public async continueTask(@Path() id: string): Promise<void> {
-    return null as unknown as void;
+  public async continueTask(@Path() id: string): Promise<Result<void>> {
+    return null as unknown as Result<void>;
   }
 
   /**
@@ -80,8 +98,8 @@ export class UsersController extends Controller {
   @Security('X-Api-Token')
   @Put('pause')
   @SuccessResponse(200)
-  public async pauseAllTasks(): Promise<void> {
-    return;
+  public async pauseAllTasks(): Promise<Result<void>> {
+    return null as unknown as Result<void>;
   }
 
   /**
@@ -91,8 +109,8 @@ export class UsersController extends Controller {
   @Security('X-Api-Token')
   @Put('continue')
   @SuccessResponse(200)
-  public async continueAllTasks(): Promise<void> {
-    return;
+  public async continueAllTasks(): Promise<Result<void>> {
+    return null as unknown as Result<void>;
   }
 
   /**
@@ -104,8 +122,8 @@ export class UsersController extends Controller {
   @Security('X-Api-Token')
   @Delete('{id}')
   @SuccessResponse(200)
-  public async deleteTask(@Path() id: string, @Query() force = false): Promise<void> {
-    return;
+  public async deleteTask(@Path() id: string, @Query() force = false): Promise<Result<void>> {
+    return null as unknown as Result<void>;
   }
 
   /**
@@ -117,7 +135,7 @@ export class UsersController extends Controller {
   @Security('X-Api-Token')
   @Delete()
   @SuccessResponse(200)
-  public async deleteTasks(@Query() status: TaskStatus[] = [], @Query() force = false): Promise<void> {
-    return;
+  public async deleteTasks(@Query() status: TaskStatus[] = [], @Query() force = false): Promise<Result<void>> {
+    return null as unknown as Result<void>;
   }
 }

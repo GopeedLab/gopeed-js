@@ -1,4 +1,5 @@
 import type {
+  Result,
   Request,
   CreateTaskWithRequest,
   CreateTaskWithResolveResult,
@@ -10,12 +11,6 @@ import type {
 interface ClientOptions {
   host: string;
   token: string;
-}
-
-interface Result<T> {
-  code: number;
-  msg: string;
-  data: T;
 }
 
 class ApiError extends Error {
