@@ -275,6 +275,9 @@ export interface Task {
   updatedAt: string;
 }
 
+/**
+ * Torrent task stats
+ */
 export interface TaskBtStats {
   /**
    * Total peers
