@@ -78,14 +78,14 @@ class Client {
 
   /**
    * Get task list
-   * @param statuses - Filter by task status
+   * @param id - Task id, can be multiple
+   * @param status - Filter by task status, can be multiple
+   * @param notStatus - Filter by excluding task status, can be multiple
    * @returns
    */
-  public async getTasks(statuses: TaskStatus[] = []): Promise<Task[]> {
+  public async getTasks(id: string[] = [], status: TaskStatus[] = [], notStatus: TaskStatus[] = []): Promise<Task[]> {
     return this.doRequest<Task[]>('GET', '/api/v1/tasks', {
-      query: {
-        status: statuses.map((status) => `status=${status.toString()}`).join('&'),
-      },
+      query: this.parseFilterParams(id, status, notStatus),
     });
   }
 
@@ -107,6 +107,18 @@ class Client {
   }
 
   /**
+   * Pause a batch of tasks
+   * @param id - Task id, can be multiple
+   * @param status - Filter by task status, can be multiple
+   * @param notStatus - Filter by excluding task status, can be multiple
+   */
+  public async pauseTasks(id: string[] = [], status: TaskStatus[] = [], notStatus: TaskStatus[] = []): Promise<void> {
+    await this.doRequest('PUT', '/api/v1/tasks/pause', {
+      query: this.parseFilterParams(id, status, notStatus),
+    });
+  }
+
+  /**
    * Continue a task
    * @param id - Task id
    */
@@ -115,17 +127,19 @@ class Client {
   }
 
   /**
-   * Pause all tasks
+   * Continue a batch of tasks
+   * @param id - Task id, can be multiple
+   * @param status - Filter by task status, can be multiple
+   * @param notStatus - Filter by excluding task status, can be multiple
    */
-  public async pauseAllTasks(): Promise<void> {
-    await this.doRequest('PUT', '/api/v1/tasks/pause');
-  }
-
-  /**
-   * Continue all tasks
-   */
-  public async continueAllTasks(): Promise<void> {
-    await this.doRequest('PUT', '/api/v1/tasks/continue');
+  public async continueTasks(
+    id: string[] = [],
+    status: TaskStatus[] = [],
+    notStatus: TaskStatus[] = []
+  ): Promise<void> {
+    await this.doRequest('PUT', '/api/v1/tasks/continue', {
+      query: this.parseFilterParams(id, status, notStatus),
+    });
   }
 
   /**
@@ -138,30 +152,33 @@ class Client {
   }
 
   /**
-   * Delete tasks
-   * @param statuses - Filter by task status
+   * Delete a batch of tasks
+   *  @param id - Task id, can be multiple
+   * @param status - Filter by task status, can be multiple
+   * @param notStatus - Filter by excluding task status, can be multiple
    * @param force - Delete files
    */
-  public async deleteTasks(statuses: TaskStatus[] = [], force = false): Promise<void> {
+  public async deleteTasks(
+    id: string[] = [],
+    status: TaskStatus[] = [],
+    notStatus: TaskStatus[] = [],
+    force = false
+  ): Promise<void> {
+    const params = this.parseFilterParams(id, status, notStatus);
+    params?.append('force', force.toString());
     await this.doRequest('DELETE', '/api/v1/tasks', {
-      query: {
-        status: statuses.map((status) => `status=${status.toString()}`).join('&'),
-        force: force,
-      },
+      query: params,
     });
   }
 
   private async doRequest<T>(
     method: string,
     path: string,
-    { query, data }: { query?: object; data?: object } = {}
+    { query, data }: { query?: URLSearchParams; data?: object } = {}
   ): Promise<T> {
     let url = this.options.host + path;
     if (query) {
-      const queryParams = Object.entries(query)
-        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`)
-        .join('&');
-      url += `?${queryParams}`;
+      url += `?${query.toString()}`;
     }
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
@@ -186,6 +203,33 @@ class Client {
     } catch (error) {
       throw new ApiError(1000, (error as Error).message);
     }
+  }
+
+  private parseFilterParams(
+    id: string[] = [],
+    status: TaskStatus[] = [],
+    notStatus: TaskStatus[] = []
+  ): URLSearchParams | undefined {
+    const params = new URLSearchParams();
+    if (id.length > 0) {
+      for (const taskId of id) {
+        params.append('id', taskId);
+      }
+    }
+    if (status.length > 0) {
+      for (const taskStatus of status) {
+        params.append('status', taskStatus.toString());
+      }
+    }
+    if (notStatus.length > 0) {
+      for (const taskStatus of notStatus) {
+        params.append('notStatus', taskStatus.toString());
+      }
+    }
+    if (params.size === 0) {
+      return undefined;
+    }
+    return params;
   }
 }
 

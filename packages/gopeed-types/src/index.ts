@@ -238,6 +238,10 @@ export interface Task {
    */
   protocol: Protocol;
   /**
+   * Task display name
+   */
+  name: string;
+  /**
    * Task metadata
    */
   meta: {

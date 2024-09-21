@@ -49,11 +49,17 @@ export class UsersController extends Controller {
   /**
    * Get task list
    * @summary Get task list
+   * @param id - Task id, can be multiple
    * @param status - Filter by task status, can be multiple
+   * @param notStatus - Filter by excluding task status, can be multiple
    */
   @Security('X-Api-Token')
   @Get()
-  public async getTasks(@Query() status: TaskStatus[] = []): Promise<Result<Task[]>> {
+  public async getTasks(
+    @Query() id: string[] = [],
+    @Query() status: TaskStatus[] = [],
+    @Query() notStatus: TaskStatus[] = []
+  ): Promise<Result<Task[]>> {
     return null as unknown as Result<Task[]>;
   }
 
@@ -81,6 +87,24 @@ export class UsersController extends Controller {
   }
 
   /**
+   * Pause a batch of tasks
+   * @summary Pause a batch of tasks
+   * @param id - Task id, can be multiple
+   * @param status - Filter by task status, can be multiple
+   * @param notStatus - Filter by excluding task status, can be multiple
+   */
+  @Security('X-Api-Token')
+  @Put('pause')
+  @SuccessResponse(200)
+  public async pauseTasks(
+    @Query() id: string[] = [],
+    @Query() status: TaskStatus[] = [],
+    @Query() notStatus: TaskStatus[] = []
+  ): Promise<Result<void>> {
+    return null as unknown as Result<void>;
+  }
+
+  /**
    * Continue a task
    * @summary Continue a task
    * @param id - Task id
@@ -93,24 +117,20 @@ export class UsersController extends Controller {
   }
 
   /**
-   * Pause all tasks
-   * @summary Pause all tasks
-   */
-  @Security('X-Api-Token')
-  @Put('pause')
-  @SuccessResponse(200)
-  public async pauseAllTasks(): Promise<Result<void>> {
-    return null as unknown as Result<void>;
-  }
-
-  /**
-   * Continue all tasks
-   * @summary Continue all tasks
+   * Continue a batch of tasks
+   * @summary Continue a batch of tasks
+   * @param id - Task id, can be multiple
+   * @param status - Filter by task status, can be multiple
+   * @param notStatus - Filter by excluding task status, can be multiple
    */
   @Security('X-Api-Token')
   @Put('continue')
   @SuccessResponse(200)
-  public async continueAllTasks(): Promise<Result<void>> {
+  public async continueTasks(
+    @Query() id: string[] = [],
+    @Query() status: TaskStatus[] = [],
+    @Query() notStatus: TaskStatus[] = []
+  ): Promise<Result<void>> {
     return null as unknown as Result<void>;
   }
 
@@ -130,13 +150,20 @@ export class UsersController extends Controller {
   /**
    * Delete tasks
    * @summary Delete tasks
+   * @param id - Task id, can be multiple
    * @param status - Filter by task status, can be multiple
+   * @param notStatus - Filter by excluding task status, can be multiple
    * @param force - Also delete files
    */
   @Security('X-Api-Token')
   @Delete()
   @SuccessResponse(200)
-  public async deleteTasks(@Query() status: TaskStatus[] = [], @Query() force = false): Promise<Result<void>> {
+  public async deleteTasks(
+    @Query() id: string[] = [],
+    @Query() status: TaskStatus[] = [],
+    @Query() notStatus: TaskStatus[] = [],
+    @Query() force = false
+  ): Promise<Result<void>> {
     return null as unknown as Result<void>;
   }
 }
