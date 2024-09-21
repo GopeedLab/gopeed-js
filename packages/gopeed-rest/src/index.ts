@@ -226,7 +226,7 @@ class Client {
         params.append('notStatus', taskStatus.toString());
       }
     }
-    if (params.size === 0) {
+    if (params.toString() === '') {
       return undefined;
     }
     return params;
