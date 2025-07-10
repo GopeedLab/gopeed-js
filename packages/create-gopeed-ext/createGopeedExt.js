@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import commander from 'commander';
 import prompts from 'prompts';
 import validateNpmName from 'validate-npm-package-name';
-import packageJson from './package.json' assert { type: 'json' };
+import packageJson from './package.json' with { type: 'json' };
 
 async function initAction() {
   const result = await prompts([
