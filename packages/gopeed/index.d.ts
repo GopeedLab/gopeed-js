@@ -77,12 +77,39 @@ export interface MessageErrorConstructor {
   (message?: string): MessageError;
 }
 
+export type Fingerprint =
+  /** No browser fingerprint simulation - use default TLS settings */
+  | 'none'
+  /** Simulate Chrome browser TLS fingerprint and headers */
+  | 'chrome'
+  /** Simulate Firefox browser TLS fingerprint and headers */
+  | 'firefox'
+  /** Simulate Safari browser TLS fingerprint and headers */
+  | 'safari';
+
 /**
  * Global gopeed extension instance
  */
 declare global {
   const gopeed: Gopeed;
   const MessageError: MessageErrorConstructor;
+
+  /**
+   * Set browser fingerprint for HTTP requests
+   * This function configures the TLS fingerprint and User-Agent headers to simulate different browsers
+   *
+   * @param fingerprint - The browser fingerprint type to simulate
+   *
+   * @example
+   * ```typescript
+   * // Simulate Chrome browser
+   * __gopeed_setFingerprint('chrome');
+   *
+   * // Use default settings (no simulation)
+   * __gopeed_setFingerprint('none');
+   * ```
+   */
+  function __gopeed_setFingerprint(fingerprint: Fingerprint): void;
 }
 
 export * from './types/events';
