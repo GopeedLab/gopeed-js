@@ -6,6 +6,7 @@ on:
     types: [published]
 
 permissions:
+  id-token: write
   contents: write
 
 jobs:
@@ -21,4 +22,4 @@ jobs:
           npm install -g pnpm
           pnpm install
           pnpm run build
-          pnpm run publish --provenance
+          pnpm run publish
