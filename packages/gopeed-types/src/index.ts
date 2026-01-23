@@ -90,7 +90,7 @@ export type ReqExtra = HttpReqExtra | BtReqExtra;
  *  "connections": 32
  * }
  */
-export interface HttpOptExtra {
+export interface HttpOptsExtra {
   /**
    * Concurrent connections
    */
@@ -101,7 +101,7 @@ export interface HttpOptExtra {
   autoTorrent?: boolean;
 }
 
-export type OptExtra = HttpOptExtra;
+export type OptsExtra = HttpOptsExtra;
 
 /**
  * Download request
@@ -198,7 +198,7 @@ export interface Options {
   /**
    * Download extra options
    */
-  extra?: OptExtra;
+  extra?: OptsExtra;
 }
 
 export type Protocol = 'http' | 'bt';
@@ -247,7 +247,7 @@ export interface Task {
   meta: {
     req: Request;
     res: Resource;
-    opt: Options;
+    opts: Options;
   };
   /**
    * Task status
@@ -312,6 +312,17 @@ export interface TaskBtStats {
 
 export type TaskStats = TaskBtStats;
 
+export interface CreateResolve {
+  /**
+   * Download request
+   */
+  req: Request;
+  /**
+   * Download options
+   */
+  opts?: Options;
+}
+
 export interface CreateTaskWithResolveResult {
   /**
    * Resolved id, from resolved result
@@ -320,7 +331,7 @@ export interface CreateTaskWithResolveResult {
   /**
    * Download options
    */
-  opt?: Options;
+  opts?: Options;
 }
 
 export interface CreateTaskWithRequest {
@@ -331,7 +342,7 @@ export interface CreateTaskWithRequest {
   /**
    * Download options
    */
-  opt?: Options;
+  opts?: Options;
 }
 
 export interface CreateTaskBatch {
@@ -342,5 +353,5 @@ export interface CreateTaskBatch {
   /**
    * Download options
    */
-  opt?: Options;
+  opts?: Options;
 }

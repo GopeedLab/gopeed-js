@@ -1,6 +1,6 @@
 import type {
   Result,
-  Request,
+  CreateResolve,
   ResolveResult,
   CreateTaskWithRequest,
   CreateTaskWithResolveResult,
@@ -39,7 +39,7 @@ class Client {
    * @param request - The request to create a new download task
    * @returns
    */
-  public async resolve(request: Request): Promise<ResolveResult> {
+  public async resolve(request: CreateResolve): Promise<ResolveResult> {
     return this.doRequest<ResolveResult>('POST', '/api/v1/resolve', {
       data: request,
     });
