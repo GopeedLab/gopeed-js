@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { Request, ResolveResult, Result } from '@gopeed/types';
+import { CreateResolve, ResolveResult, Result } from '@gopeed/types';
 import { Body, Controller, Post, Route, Security } from 'tsoa';
 
 @Route('/api/v1/resolve')
@@ -11,7 +11,7 @@ export class UsersController extends Controller {
    */
   @Security('X-Api-Token')
   @Post()
-  public async resolve(@Body() req: Request): Promise<Result<ResolveResult>> {
+  public async resolve(@Body() req: CreateResolve): Promise<Result<ResolveResult>> {
     return null as unknown as Result<ResolveResult>;
   }
 }
