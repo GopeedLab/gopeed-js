@@ -5,10 +5,10 @@ import { Controller, Get, Route, Security, Tags } from 'tsoa';
 
 @Route('/api/v1')
 @Tags('Info')
-export class UsersController extends Controller {
+export class IndexController extends Controller {
   /**
-   * Get server info
-   * @summary Get server info
+   * Get gopeed info
+   * @summary Get gopeed info
    */
   @Security('X-Api-Token')
   @Get('/info')
