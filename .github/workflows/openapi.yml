@@ -26,6 +26,7 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm install
+          pnpm build
 
       - name: Build openapi spec
         run: pnpm --filter gopeed-openapi build
