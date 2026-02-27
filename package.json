@@ -1,11 +1,12 @@
 {
   "private": true,
-  "version": "1.7.0",
+  "version": "1.8.0",
   "type": "module",
   "scripts": {
     "build": "rollup -c",
     "docs": "typedoc",
-    "publish": "pnpm publish -r --no-git-checks"
+    "publish": "pnpm publish -r --no-git-checks",
+    "bump": "node scripts/bump.js"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.0",

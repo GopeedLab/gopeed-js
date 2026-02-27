@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import { Result, ServerInfo } from '@gopeed/types';
-import { Controller, Get, Route, Security } from 'tsoa';
+import { Controller, Get, Route, Security, Tags } from 'tsoa';
 
 @Route('/api/v1')
+@Tags('Info')
 export class UsersController extends Controller {
   /**
    * Get server info

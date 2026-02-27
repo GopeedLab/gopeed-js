@@ -1,0 +1,37 @@
+name: OpenAPI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/gopeed-openapi/**'
+      - 'packages/gopeed-types/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install
+
+      - name: Build openapi spec
+        run: pnpm --filter gopeed-openapi build
+
+      - name: Commit swagger.json
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore(openapi): regenerate swagger.json'
+          file_pattern: 'packages/gopeed-openapi/swagger.json'

@@ -1,0 +1,2469 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"DownloaderProxyConfig": {
+				"description": "Proxy configuration for downloader",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"description": "Enable proxy"
+					},
+					"system": {
+						"type": "boolean",
+						"description": "Use system proxy"
+					},
+					"scheme": {
+						"type": "string",
+						"description": "Proxy scheme, e.g. \"http\", \"socks5\""
+					},
+					"host": {
+						"type": "string",
+						"description": "Proxy host, e.g. \"127.0.0.1:1080\""
+					},
+					"usr": {
+						"type": "string",
+						"description": "Proxy username"
+					},
+					"pwd": {
+						"type": "string",
+						"description": "Proxy password"
+					}
+				},
+				"required": [
+					"enable"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WebhookConfig": {
+				"description": "Webhook configuration",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"description": "Enable webhooks"
+					},
+					"urls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "List of webhook URLs to call on download events"
+					}
+				},
+				"required": [
+					"enable"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ScriptConfig": {
+				"description": "Script execution configuration",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"description": "Enable script execution"
+					},
+					"paths": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "List of script file paths to execute on download events"
+					}
+				},
+				"required": [
+					"enable"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AutoTorrentConfig": {
+				"description": "Auto torrent task creation configuration",
+				"properties": {
+					"enable": {
+						"type": "boolean",
+						"description": "Enable automatic BT task creation when downloading .torrent files"
+					},
+					"deleteAfterDownload": {
+						"type": "boolean",
+						"description": "Delete the .torrent file after BT task creation"
+					}
+				},
+				"required": [
+					"enable"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ArchiveConfig": {
+				"description": "Archive extraction configuration",
+				"properties": {
+					"autoExtract": {
+						"type": "boolean",
+						"description": "Enable automatic extraction of archives after download"
+					},
+					"deleteAfterExtract": {
+						"type": "boolean",
+						"description": "Delete the archive after successful extraction"
+					}
+				},
+				"required": [
+					"autoExtract"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DownloaderStoreConfig": {
+				"description": "Downloader global configuration (storable)",
+				"properties": {
+					"downloadDir": {
+						"type": "string",
+						"description": "Default directory to save downloaded files"
+					},
+					"maxRunning": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum number of concurrent downloads"
+					},
+					"protocolConfig": {
+						"properties": {},
+						"additionalProperties": {},
+						"type": "object",
+						"description": "Protocol-specific configuration (keyed by protocol name, e.g. \"http\", \"bt\")"
+					},
+					"extra": {
+						"properties": {},
+						"additionalProperties": {},
+						"type": "object",
+						"description": "Extra configuration"
+					},
+					"proxy": {
+						"$ref": "#/components/schemas/DownloaderProxyConfig",
+						"description": "Global proxy configuration"
+					},
+					"webhook": {
+						"$ref": "#/components/schemas/WebhookConfig",
+						"description": "Webhook configuration"
+					},
+					"script": {
+						"$ref": "#/components/schemas/ScriptConfig",
+						"description": "Script execution configuration"
+					},
+					"autoTorrent": {
+						"$ref": "#/components/schemas/AutoTorrentConfig",
+						"description": "Auto torrent creation configuration"
+					},
+					"archive": {
+						"$ref": "#/components/schemas/ArchiveConfig",
+						"description": "Archive extraction configuration"
+					},
+					"autoDeleteMissingFileTasks": {
+						"type": "boolean",
+						"description": "Automatically delete tasks whose files are missing on disk"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_DownloaderStoreConfig_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"$ref": "#/components/schemas/DownloaderStoreConfig",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_void_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_string_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"type": "string",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InstallExtension": {
+				"description": "Request body for installing an extension",
+				"properties": {
+					"url": {
+						"type": "string",
+						"description": "Git URL or local path (dev mode)"
+					},
+					"devMode": {
+						"type": "boolean",
+						"description": "Enable dev mode (load from local folder)"
+					}
+				},
+				"required": [
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ExtensionRepository": {
+				"description": "Extension git repository info",
+				"properties": {
+					"url": {
+						"type": "string",
+						"description": "Git repository URL"
+					},
+					"directory": {
+						"type": "string",
+						"description": "Sub-directory within the repository (if extension is not at root)"
+					}
+				},
+				"required": [
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ExtensionMatch": {
+				"description": "Extension script match rules",
+				"properties": {
+					"urls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "URL match patterns (Chrome extension match pattern format)"
+					},
+					"labels": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Label keys to match on requests"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ExtensionScript": {
+				"description": "Extension script definition",
+				"properties": {
+					"event": {
+						"type": "string",
+						"description": "Activation event name, e.g. \"onResolve\", \"onStart\", \"onError\", \"onDone\""
+					},
+					"match": {
+						"$ref": "#/components/schemas/ExtensionMatch",
+						"description": "Match rules"
+					},
+					"entry": {
+						"type": "string",
+						"description": "Entry JS file path (relative to extension directory)"
+					}
+				},
+				"required": [
+					"event",
+					"entry"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SettingType": {
+				"type": "string",
+				"enum": [
+					"string",
+					"number",
+					"boolean"
+				],
+				"description": "Extension setting type"
+			},
+			"ExtensionSettingOption": {
+				"description": "Extension setting option (for select-type settings)",
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"value": {}
+				},
+				"required": [
+					"label",
+					"value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ExtensionSetting": {
+				"description": "Extension setting definition",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"required": {
+						"type": "boolean"
+					},
+					"type": {
+						"$ref": "#/components/schemas/SettingType"
+					},
+					"value": {},
+					"options": {
+						"items": {
+							"$ref": "#/components/schemas/ExtensionSettingOption"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"name",
+					"title",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Extension": {
+				"description": "Extension info",
+				"properties": {
+					"identity": {
+						"type": "string",
+						"description": "Global unique identity, format: \"author@name\""
+					},
+					"name": {
+						"type": "string"
+					},
+					"author": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"icon": {
+						"type": "string"
+					},
+					"version": {
+						"type": "string",
+						"description": "Semantic version, e.g. \"1.0.0\""
+					},
+					"homepage": {
+						"type": "string"
+					},
+					"repository": {
+						"$ref": "#/components/schemas/ExtensionRepository"
+					},
+					"scripts": {
+						"items": {
+							"$ref": "#/components/schemas/ExtensionScript"
+						},
+						"type": "array"
+					},
+					"settings": {
+						"items": {
+							"$ref": "#/components/schemas/ExtensionSetting"
+						},
+						"type": "array"
+					},
+					"disabled": {
+						"type": "boolean",
+						"description": "Whether the extension is disabled"
+					},
+					"devMode": {
+						"type": "boolean",
+						"description": "Whether the extension is running in dev mode"
+					},
+					"devPath": {
+						"type": "string",
+						"description": "Local path for dev mode extensions"
+					},
+					"createdAt": {
+						"type": "string",
+						"description": "Created time, ISO 8601 format"
+					},
+					"updatedAt": {
+						"type": "string",
+						"description": "Updated time, ISO 8601 format"
+					}
+				},
+				"required": [
+					"identity",
+					"name",
+					"title",
+					"version"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_Extension-Array_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/Extension"
+						},
+						"type": "array",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_Extension_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"$ref": "#/components/schemas/Extension",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateExtensionSettings": {
+				"description": "Request body for updating extension settings",
+				"properties": {
+					"settings": {
+						"properties": {},
+						"additionalProperties": {},
+						"type": "object",
+						"description": "Settings key-value pairs"
+					}
+				},
+				"required": [
+					"settings"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SwitchExtension": {
+				"description": "Request body for switching extension enabled/disabled",
+				"properties": {
+					"status": {
+						"type": "boolean",
+						"description": "true to enable, false to disable"
+					}
+				},
+				"required": [
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateCheckExtensionResp": {
+				"description": "Response body for checking extension update",
+				"properties": {
+					"newVersion": {
+						"type": "string",
+						"description": "New version string, empty if already up-to-date"
+					}
+				},
+				"required": [
+					"newVersion"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_UpdateCheckExtensionResp_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"$ref": "#/components/schemas/UpdateCheckExtensionResp",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ServerInfo": {
+				"description": "Server info",
+				"properties": {
+					"version": {
+						"type": "string",
+						"description": "Application version"
+					},
+					"runtime": {
+						"type": "string",
+						"description": "Go version"
+					},
+					"os": {
+						"type": "string",
+						"description": "OS version"
+					},
+					"arch": {
+						"type": "string",
+						"description": "CPU architecture"
+					},
+					"inDocker": {
+						"type": "boolean",
+						"description": "Is running in docker"
+					}
+				},
+				"required": [
+					"version",
+					"runtime",
+					"os",
+					"arch"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_ServerInfo_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"$ref": "#/components/schemas/ServerInfo",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"HttpMethod": {
+				"type": "string",
+				"enum": [
+					"GET",
+					"POST",
+					"PUT",
+					"DELETE",
+					"PATCH",
+					"HEAD",
+					"OPTIONS",
+					"CONNECT",
+					"TRACE"
+				]
+			},
+			"HttpHeader": {
+				"properties": {},
+				"additionalProperties": {
+					"type": "string"
+				},
+				"type": "object"
+			},
+			"HttpReqExtra": {
+				"description": "HTTP request extra options",
+				"properties": {
+					"method": {
+						"$ref": "#/components/schemas/HttpMethod",
+						"description": "HTTP request method"
+					},
+					"header": {
+						"$ref": "#/components/schemas/HttpHeader",
+						"description": "HTTP request header"
+					},
+					"body": {
+						"type": "string",
+						"description": "HTTP request body"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"method": "GET",
+					"header": {
+						"Cookie": "xxx"
+					}
+				}
+			},
+			"BtReqExtra": {
+				"description": "Bt request extra options",
+				"properties": {
+					"trackers": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Tracker url list"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"trackers": [
+						"udp://tracker.opentrackr.org:1337/announce"
+					]
+				}
+			},
+			"ReqExtra": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/HttpReqExtra"
+					},
+					{
+						"$ref": "#/components/schemas/BtReqExtra"
+					}
+				]
+			},
+			"RequestProxyMode": {
+				"type": "string",
+				"enum": [
+					"follow",
+					"none",
+					"custom"
+				],
+				"description": "Request proxy mode"
+			},
+			"RequestProxy": {
+				"description": "Per-request proxy configuration",
+				"properties": {
+					"mode": {
+						"$ref": "#/components/schemas/RequestProxyMode",
+						"description": "Proxy mode: follow global setting, none (no proxy), or custom"
+					},
+					"scheme": {
+						"type": "string",
+						"description": "Proxy scheme, e.g. \"http\", \"socks5\""
+					},
+					"host": {
+						"type": "string",
+						"description": "Proxy host, e.g. \"127.0.0.1:1080\""
+					},
+					"usr": {
+						"type": "string",
+						"description": "Proxy username"
+					},
+					"pwd": {
+						"type": "string",
+						"description": "Proxy password"
+					}
+				},
+				"required": [
+					"mode"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Request": {
+				"description": "Download request",
+				"properties": {
+					"url": {
+						"type": "string",
+						"description": "Request url, support http(s) and magnet and local torrent file"
+					},
+					"extra": {
+						"$ref": "#/components/schemas/ReqExtra",
+						"description": "Extra request options"
+					},
+					"labels": {
+						"properties": {},
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object",
+						"description": "Request labels"
+					},
+					"proxy": {
+						"$ref": "#/components/schemas/RequestProxy",
+						"description": "Per-request proxy configuration. If not set, uses global proxy settings"
+					},
+					"skipVerifyCert": {
+						"type": "boolean",
+						"description": "Skip TLS certificate verification"
+					}
+				},
+				"required": [
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"url": "https://example.com/file.mp4"
+				}
+			},
+			"FileInfo": {
+				"description": "File info",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "File name"
+					},
+					"path": {
+						"type": "string",
+						"description": "File path, relative to the resource, e.g. \"path/to\""
+					},
+					"size": {
+						"type": "number",
+						"format": "double",
+						"description": "File size(byte)"
+					},
+					"ctime": {
+						"type": "string",
+						"description": "File creation time"
+					},
+					"req": {
+						"$ref": "#/components/schemas/Request",
+						"description": "Specify the request for this file"
+					}
+				},
+				"required": [
+					"name",
+					"path",
+					"size"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"name": "file.mp4",
+					"path": "",
+					"size": 1024
+				}
+			},
+			"Resource": {
+				"description": "Resource info resloved from request, can contain multiple files",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "When name is not blank, it means that the resource is a folder resource, and the name is the folder name"
+					},
+					"size": {
+						"type": "number",
+						"format": "double",
+						"description": "Resource total size(byte)"
+					},
+					"range": {
+						"type": "boolean",
+						"description": "Whether the resource supports breakpoint continuation"
+					},
+					"files": {
+						"items": {
+							"$ref": "#/components/schemas/FileInfo"
+						},
+						"type": "array",
+						"description": "Resource files list, only when the resource is a folder resource will contain multiple files, otherwise it will only contain one file"
+					},
+					"hash": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"size",
+					"range",
+					"files"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResolveResult": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"res": {
+						"$ref": "#/components/schemas/Resource"
+					}
+				},
+				"required": [
+					"id",
+					"res"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_ResolveResult_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"$ref": "#/components/schemas/ResolveResult",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"HttpOptsExtra": {
+				"description": "HTTP download extra options",
+				"properties": {
+					"connections": {
+						"type": "number",
+						"format": "double",
+						"description": "Concurrent connections"
+					},
+					"autoTorrent": {
+						"type": "boolean",
+						"description": "When task download complete, and it is a .torrent file, it will be auto create a new task for the torrent file.\nnull means use global config"
+					},
+					"deleteTorrentAfterDownload": {
+						"type": "boolean",
+						"description": "When true, deletes the .torrent file after creating BT task.\nnull means use global config"
+					},
+					"autoExtract": {
+						"type": "boolean",
+						"description": "When task download complete, and it is an archive file, it will be auto extracted.\nnull means use global config"
+					},
+					"archivePassword": {
+						"type": "string",
+						"description": "Password for extracting password-protected archives"
+					},
+					"deleteAfterExtract": {
+						"type": "boolean",
+						"description": "When true, deletes the archive file after successful extraction"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"connections": 32
+				}
+			},
+			"OptsExtra": {
+				"$ref": "#/components/schemas/HttpOptsExtra"
+			},
+			"Options": {
+				"description": "Download options",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "Specify the file name, if not set, use the name from resource"
+					},
+					"path": {
+						"type": "string",
+						"description": "Specify the path to save the file, if not set, use the current directory"
+					},
+					"selectFiles": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array",
+						"description": "Select the index of the specified file, if not set, download all files"
+					},
+					"extra": {
+						"$ref": "#/components/schemas/OptsExtra",
+						"description": "Download extra options"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateResolve": {
+				"properties": {
+					"req": {
+						"$ref": "#/components/schemas/Request",
+						"description": "Download request"
+					},
+					"opts": {
+						"$ref": "#/components/schemas/Options",
+						"description": "Download options"
+					}
+				},
+				"required": [
+					"req"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTaskWithResolveResult": {
+				"properties": {
+					"rid": {
+						"type": "string",
+						"description": "Resolved id, from resolved result"
+					},
+					"opts": {
+						"$ref": "#/components/schemas/Options",
+						"description": "Download options"
+					}
+				},
+				"required": [
+					"rid"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTaskWithRequest": {
+				"properties": {
+					"req": {
+						"$ref": "#/components/schemas/Request",
+						"description": "Download request"
+					},
+					"opts": {
+						"$ref": "#/components/schemas/Options",
+						"description": "Download options"
+					}
+				},
+				"required": [
+					"req"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_string-Array_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTaskBatch": {
+				"properties": {
+					"reqs": {
+						"items": {
+							"$ref": "#/components/schemas/Request"
+						},
+						"type": "array",
+						"description": "Download request list"
+					},
+					"opts": {
+						"$ref": "#/components/schemas/Options",
+						"description": "Download options"
+					}
+				},
+				"required": [
+					"reqs"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PatchTask": {
+				"description": "Patch task request body (modify request or options of an existing task)",
+				"properties": {
+					"req": {
+						"$ref": "#/components/schemas/Request",
+						"description": "New request info (HTTP protocol: modify URL/headers; BT: modify tracker etc.)"
+					},
+					"opts": {
+						"$ref": "#/components/schemas/Options",
+						"description": "New options (e.g. change selectFiles for BT task)"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Protocol": {
+				"type": "string",
+				"enum": [
+					"http",
+					"bt"
+				]
+			},
+			"TaskStatus": {
+				"type": "string",
+				"enum": [
+					"ready",
+					"running",
+					"pause",
+					"wait",
+					"error",
+					"done"
+				]
+			},
+			"ExtractStatus": {
+				"type": "string",
+				"enum": [
+					"",
+					"queued",
+					"waitingParts",
+					"extracting",
+					"done",
+					"error"
+				],
+				"description": "Archive extraction status"
+			},
+			"TaskProgress": {
+				"properties": {
+					"used": {
+						"type": "number",
+						"format": "double",
+						"description": "Download used time(ns)"
+					},
+					"speed": {
+						"type": "number",
+						"format": "double",
+						"description": "Download speed(byte/s)"
+					},
+					"downloaded": {
+						"type": "number",
+						"format": "double",
+						"description": "Downloaded size(byte)"
+					},
+					"uploadSpeed": {
+						"type": "number",
+						"format": "double",
+						"description": "Uploaded speed(bytes/s)"
+					},
+					"uploaded": {
+						"type": "number",
+						"format": "double",
+						"description": "Uploaded size(bytes)"
+					},
+					"extractStatus": {
+						"$ref": "#/components/schemas/ExtractStatus",
+						"description": "Archive extraction status"
+					},
+					"extractProgress": {
+						"type": "number",
+						"format": "double",
+						"description": "Archive extraction progress (0-100)"
+					},
+					"multiPartBaseName": {
+						"type": "string",
+						"description": "For multi-part archives: the base name used to group related parts"
+					},
+					"multiPartNumber": {
+						"type": "number",
+						"format": "double",
+						"description": "For multi-part archives: part number (1-indexed)"
+					},
+					"multiPartIsFirst": {
+						"type": "boolean",
+						"description": "For multi-part archives: whether this is the first part"
+					}
+				},
+				"required": [
+					"used",
+					"speed",
+					"downloaded",
+					"uploadSpeed",
+					"uploaded"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Task": {
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Task id"
+					},
+					"protocol": {
+						"$ref": "#/components/schemas/Protocol",
+						"description": "Protocol type"
+					},
+					"name": {
+						"type": "string",
+						"description": "Task display name"
+					},
+					"meta": {
+						"properties": {
+							"opts": {
+								"$ref": "#/components/schemas/Options"
+							},
+							"res": {
+								"$ref": "#/components/schemas/Resource"
+							},
+							"req": {
+								"$ref": "#/components/schemas/Request"
+							}
+						},
+						"required": [
+							"opts",
+							"res",
+							"req"
+						],
+						"type": "object",
+						"description": "Task metadata"
+					},
+					"status": {
+						"$ref": "#/components/schemas/TaskStatus",
+						"description": "Task status",
+						"example": "ready"
+					},
+					"uploading": {
+						"type": "boolean",
+						"description": "Task is uploading"
+					},
+					"progress": {
+						"$ref": "#/components/schemas/TaskProgress",
+						"description": "Task progress"
+					},
+					"size": {
+						"type": "number",
+						"format": "double",
+						"description": "Task total size(byte)"
+					},
+					"createdAt": {
+						"type": "string",
+						"description": "Task created time, ISO 8601 format",
+						"example": "2023-03-04T19:11:01.8468886+08:00"
+					},
+					"updatedAt": {
+						"type": "string",
+						"description": "Task updated time, ISO 8601 format",
+						"example": "2023-03-04T19:11:01.8468886+08:00"
+					}
+				},
+				"required": [
+					"id",
+					"protocol",
+					"name",
+					"meta",
+					"status",
+					"uploading",
+					"progress",
+					"size",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_Task_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"$ref": "#/components/schemas/Task",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Result_Task-Array_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/Task"
+						},
+						"type": "array",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TaskBtStats": {
+				"description": "Torrent task stats",
+				"properties": {
+					"totalPeers": {
+						"type": "number",
+						"format": "double",
+						"description": "Total peers"
+					},
+					"activePeers": {
+						"type": "number",
+						"format": "double",
+						"description": "Active peers"
+					},
+					"connectedSeeders": {
+						"type": "number",
+						"format": "double",
+						"description": "Connected seeders"
+					},
+					"seedBytes": {
+						"type": "number",
+						"format": "double",
+						"description": "Total seed bytes"
+					},
+					"seedRatio": {
+						"type": "number",
+						"format": "double",
+						"description": "Seed ratio",
+						"example": 0.1
+					},
+					"seedTime": {
+						"type": "number",
+						"format": "double",
+						"description": "Total seed time(s)"
+					}
+				},
+				"required": [
+					"totalPeers",
+					"activePeers",
+					"connectedSeeders",
+					"seedBytes",
+					"seedRatio",
+					"seedTime"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TaskStats": {
+				"$ref": "#/components/schemas/TaskBtStats"
+			},
+			"Result_TaskStats_": {
+				"description": "REST API result",
+				"properties": {
+					"code": {
+						"type": "number",
+						"format": "double",
+						"description": "The response code, `0` means success, other values means error."
+					},
+					"msg": {
+						"type": "string",
+						"description": "The response message, if `code` != `0`, this field will contain error message."
+					},
+					"data": {
+						"$ref": "#/components/schemas/TaskStats",
+						"description": "The response data, if `code` == `0`, this field will contain response data."
+					}
+				},
+				"required": [
+					"code",
+					"msg",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"X-Api-Token": {
+				"type": "apiKey",
+				"name": "X-Api-Token",
+				"in": "header",
+				"description": "Api Token for authentication"
+			}
+		}
+	},
+	"info": {
+		"title": "Introduction",
+		"version": "v1",
+		"description": "This is gopeed RESTful API document. You can use this API to manage download tasks.\n\n# Response Format\n\nAll APIs return JSON format response. The response format is:\n\n```json\n{\n  \"code\": 0,\n  \"message\": \"\",\n  \"data\": null\n}\n```\n\n- `code`: The response code, `0` means success, other values means error.\n- `message`: The response message, if `code` != `0`, this field will contain error message.\n- `data`: The response data, if `code` == `0`, this field will contain response data.\n\n# Authentication\n\nWhen configed API token in Gopeed, should pass `X-Api-Token` in request header.\n\n# JavaScript Library\n\nWe provide a JavaScript library to help you use this API. You can install it by npm:\n\n```bash\nnpm install @gopeed/rest\n```\n\nThen you can use it in your code:\n\n```js\nimport Client from \"@gopeed/rest\";\n\n(async function(){\n  const client = new Client();\n  // Config host and API token\n  // const client = new Client({\"host:\":\"http://api.xxx.com\", \"token\": \"your api token\"});\n\n  // Create a http download task\n  await client.createTask({\n    \"req\":{\n      \"url\": \"https://gopeed.com\"\n    }\n  });\n\n  // Create a bt download task\n  await client.createTask({\n    \"req\":{\n      \"url\": \"magnet:?xt=urn:btih:xxx\"\n    }\n  });\n});\n````\n",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {
+			"url": "https://gopeed.com"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/api/v1/config": {
+			"get": {
+				"operationId": "GetConfig",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_DownloaderStoreConfig_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get downloader configuration",
+				"summary": "Get config",
+				"tags": [
+					"Config"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "PutConfig",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update downloader configuration",
+				"summary": "Put config",
+				"tags": [
+					"Config"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DownloaderStoreConfig"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/extensions": {
+			"post": {
+				"operationId": "InstallExtension",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_string_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Install an extension from a Git URL or a local folder (dev mode)",
+				"summary": "Install extension",
+				"tags": [
+					"Extensions"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InstallExtension"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetExtensions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_Extension-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all installed extensions",
+				"summary": "Get extensions",
+				"tags": [
+					"Extensions"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/extensions/{identity}": {
+			"get": {
+				"operationId": "GetExtension",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_Extension_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get a single extension by identity",
+				"summary": "Get extension",
+				"tags": [
+					"Extensions"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Extension identity (e.g. \"author@name\")",
+						"in": "path",
+						"name": "identity",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteExtension",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete an extension",
+				"summary": "Delete extension",
+				"tags": [
+					"Extensions"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Extension identity",
+						"in": "path",
+						"name": "identity",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/extensions/{identity}/settings": {
+			"put": {
+				"operationId": "UpdateExtensionSettings",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update settings of an extension",
+				"summary": "Update extension settings",
+				"tags": [
+					"Extensions"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Extension identity",
+						"in": "path",
+						"name": "identity",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateExtensionSettings"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/extensions/{identity}/switch": {
+			"put": {
+				"operationId": "SwitchExtension",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Enable or disable an extension",
+				"summary": "Switch extension",
+				"tags": [
+					"Extensions"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Extension identity",
+						"in": "path",
+						"name": "identity",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SwitchExtension"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/extensions/{identity}/update": {
+			"get": {
+				"operationId": "UpdateCheckExtension",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_UpdateCheckExtensionResp_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Check if a new version is available for an extension",
+				"summary": "Check extension update",
+				"tags": [
+					"Extensions"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Extension identity",
+						"in": "path",
+						"name": "identity",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "UpdateExtension",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Upgrade an extension to the latest version",
+				"summary": "Update extension",
+				"tags": [
+					"Extensions"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Extension identity",
+						"in": "path",
+						"name": "identity",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/info": {
+			"get": {
+				"operationId": "Info",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_ServerInfo_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get server info",
+				"summary": "Get server info",
+				"tags": [
+					"Info"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/resolve": {
+			"post": {
+				"operationId": "Resolve",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_ResolveResult_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Resolve resource info from request, contains file name, size, etc.",
+				"summary": "Resolve a request",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateResolve"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/tasks": {
+			"post": {
+				"operationId": "CreateTask",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_string_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a download task, there has two ways to create a task:\n1. Create a task with resolved id, it depends on the result of /api/v1/resolve API\n2. Create a task directly with request",
+				"summary": "Create a task",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"anyOf": [
+									{
+										"$ref": "#/components/schemas/CreateTaskWithResolveResult"
+									},
+									{
+										"$ref": "#/components/schemas/CreateTaskWithRequest"
+									}
+								]
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetTasks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_Task-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get task list",
+				"summary": "Get task list",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id, can be multiple",
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"description": "- Filter by task status, can be multiple",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/TaskStatus"
+							}
+						}
+					},
+					{
+						"description": "- Filter by excluding task status, can be multiple",
+						"in": "query",
+						"name": "notStatus",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/TaskStatus"
+							}
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteTasks",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete tasks",
+				"summary": "Delete tasks",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id, can be multiple",
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"description": "- Filter by task status, can be multiple",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/TaskStatus"
+							}
+						}
+					},
+					{
+						"description": "- Filter by excluding task status, can be multiple",
+						"in": "query",
+						"name": "notStatus",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/TaskStatus"
+							}
+						}
+					},
+					{
+						"description": "- Also delete files",
+						"in": "query",
+						"name": "force",
+						"required": false,
+						"schema": {
+							"default": false,
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/tasks/batch": {
+			"post": {
+				"operationId": "CreateTaskBatch",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_string-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a batch of download tasks",
+				"summary": "Create a batch of tasks",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTaskBatch"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/tasks/{id}": {
+			"patch": {
+				"operationId": "PatchTask",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Patch a task, modify the request or options of an existing task.\nFor HTTP protocol, it can modify request info (URL, headers, etc.).\nFor BT protocol, it can modify selectFiles.",
+				"summary": "Patch a task",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PatchTask"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetTask",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_Task_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get task info",
+				"summary": "Get task",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteTask",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete a task",
+				"summary": "Delete a task",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "- Also delete files",
+						"in": "query",
+						"name": "force",
+						"required": false,
+						"schema": {
+							"default": false,
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/tasks/{id}/stats": {
+			"get": {
+				"operationId": "Stats",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_TaskStats_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get task stats",
+				"summary": "Get task stats",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/tasks/{id}/pause": {
+			"put": {
+				"operationId": "PauseTask",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Pause a task",
+				"summary": "Pause a task",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/tasks/pause": {
+			"put": {
+				"operationId": "PauseTasks",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Pause a batch of tasks",
+				"summary": "Pause a batch of tasks",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id, can be multiple",
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"description": "- Filter by task status, can be multiple",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/TaskStatus"
+							}
+						}
+					},
+					{
+						"description": "- Filter by excluding task status, can be multiple",
+						"in": "query",
+						"name": "notStatus",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/TaskStatus"
+							}
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/tasks/{id}/continue": {
+			"put": {
+				"operationId": "ContinueTask",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Continue a task",
+				"summary": "Continue a task",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/tasks/continue": {
+			"put": {
+				"operationId": "ContinueTasks",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_void_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Continue a batch of tasks",
+				"summary": "Continue a batch of tasks",
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"X-Api-Token": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "- Task id, can be multiple",
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"description": "- Filter by task status, can be multiple",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/TaskStatus"
+							}
+						}
+					},
+					{
+						"description": "- Filter by excluding task status, can be multiple",
+						"in": "query",
+						"name": "notStatus",
+						"required": false,
+						"schema": {
+							"default": [],
+							"type": "array",
+							"items": {
+								"$ref": "#/components/schemas/TaskStatus"
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "http://127.0.0.1:9999/"
+		}
+	],
+	"tags": [
+		{
+			"name": "Info",
+			"description": "Server information"
+		},
+		{
+			"name": "Tasks",
+			"description": "Download task management"
+		},
+		{
+			"name": "Config",
+			"description": "Downloader configuration"
+		},
+		{
+			"name": "Extensions",
+			"description": "Extension management"
+		}
+	]
+}

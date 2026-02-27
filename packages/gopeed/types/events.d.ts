@@ -26,12 +26,18 @@ export interface OnErrorContext {
   error: Error;
 }
 
+export interface OnDoneContext {
+  task: ExtensionTask;
+}
+
 export type EventOnResolve = (ctx: OnResovleContext) => Promise<void> | void;
 export type EventOnStart = (ctx: OnStartContext) => Promise<void> | void;
 export type EventOnError = (ctx: OnErrorContext) => Promise<void> | void;
+export type EventOnDone = (ctx: OnDoneContext) => Promise<void> | void;
 
 export interface Events {
   onResolve: (handler: EventOnResolve) => void;
   onStart: (handler: EventOnStart) => void;
   onError: (handler: EventOnError) => void;
+  onDone: (handler: EventOnDone) => void;
 }

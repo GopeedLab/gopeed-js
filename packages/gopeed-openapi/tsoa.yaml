@@ -3,12 +3,12 @@ noImplicitAdditionalProperties: throw-on-extras
 controllerPathGlobs:
   - src/**/*Controller.ts
 spec:
-  outputDirectory: build
+  outputDirectory: .
   specVersion: 3
   https: false
   schemes:
     - http
-  host: "127.0.0.1:9999"
+  host: '127.0.0.1:9999'
   version: v1
   name: Introduction
   description: |
@@ -68,12 +68,21 @@ spec:
     });
     ````
   contact:
-    url: "https://gopeed.com"
+    url: 'https://gopeed.com'
+  tags:
+    - name: Info
+      description: Server information
+    - name: Tasks
+      description: Download task management
+    - name: Config
+      description: Downloader configuration
+    - name: Extensions
+      description: Extension management
   securityDefinitions:
     X-Api-Token:
       type: apiKey
       name: X-Api-Token
       in: header
-      description: "Api Token for authentication"
+      description: 'Api Token for authentication'
 routes:
-  routesDir: build
+  routesDir: .

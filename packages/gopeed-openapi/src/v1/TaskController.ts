@@ -8,10 +8,26 @@ import {
   CreateTaskBatch,
   Result,
   TaskStats,
+  PatchTask,
 } from '@gopeed/types';
-import { Body, Controller, Delete, Get, Path, Post, Put, Query, Route, Security, SuccessResponse } from 'tsoa';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Path,
+  Post,
+  Put,
+  Query,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+} from 'tsoa';
 
 @Route('/api/v1/tasks')
+@Tags('Tasks')
 export class UsersController extends Controller {
   /**
    * Create a download task, there has two ways to create a task:
@@ -36,9 +52,23 @@ export class UsersController extends Controller {
   }
 
   /**
-   * Get task info
+   * Patch a task, modify the request or options of an existing task.
+   * For HTTP protocol, it can modify request info (URL, headers, etc.).
+   * For BT protocol, it can modify selectFiles.
+   * @summary Patch a task
    * @param id - Task id
-   * @returns
+   */
+  @Security('X-Api-Token')
+  @Patch('{id}')
+  @SuccessResponse(200)
+  public async patchTask(@Path() id: string, @Body() req: PatchTask): Promise<Result<void>> {
+    return null as unknown as Result<void>;
+  }
+
+  /**
+   * Get a task info
+   * @summary Get a task
+   * @param id - Task id
    */
   @Security('X-Api-Token')
   @Get('{id}')
@@ -65,8 +95,8 @@ export class UsersController extends Controller {
 
   /**
    * Get task stats
+   * @summary Get task stats
    * @param id - Task id
-   * @returns
    */
   @Security('X-Api-Token')
   @Get('{id}/stats')

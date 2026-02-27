@@ -1,14 +1,22 @@
 import type {
   Result,
+  ServerInfo,
   CreateResolve,
   ResolveResult,
   CreateTaskWithRequest,
   CreateTaskWithResolveResult,
   CreateTaskBatch,
+  PatchTask,
   Task,
   TaskStatus,
   TaskBtStats,
   TaskStats,
+  DownloaderStoreConfig,
+  Extension,
+  InstallExtension,
+  UpdateExtensionSettings,
+  SwitchExtension,
+  UpdateCheckExtensionResp,
 } from '@gopeed/types';
 
 interface ClientOptions {
@@ -34,6 +42,18 @@ class Client {
     this.options = options;
   }
 
+  // ========== Info ==========
+
+  /**
+   * Get server info
+   * @returns
+   */
+  public async getInfo(): Promise<ServerInfo> {
+    return this.doRequest<ServerInfo>('GET', '/api/v1/info');
+  }
+
+  // ========== Resolve ==========
+
   /**
    * Resolve the download request
    * @param request - The request to create a new download task
@@ -44,6 +64,8 @@ class Client {
       data: request,
     });
   }
+
+  // ========== Tasks ==========
 
   /**
    * Create a new download task
@@ -63,6 +85,19 @@ class Client {
    */
   public async createTaskBatch(request: CreateTaskBatch): Promise<string[]> {
     return this.doRequest<string[]>('POST', '/api/v1/tasks/batch', {
+      data: request,
+    });
+  }
+
+  /**
+   * Patch an existing task (modify request or options).
+   * For HTTP protocol, it can modify request info (URL, headers, etc.).
+   * For BT protocol, it can modify selectFiles.
+   * @param id - Task id
+   * @param request - The patch request
+   */
+  public async patchTask(id: string, request: PatchTask): Promise<void> {
+    await this.doRequest('PATCH', `/api/v1/tasks/${id}`, {
       data: request,
     });
   }
@@ -153,7 +188,7 @@ class Client {
 
   /**
    * Delete a batch of tasks
-   *  @param id - Task id, can be multiple
+   * @param id - Task id, can be multiple
    * @param status - Filter by task status, can be multiple
    * @param notStatus - Filter by excluding task status, can be multiple
    * @param force - Delete files
@@ -170,6 +205,106 @@ class Client {
       query: params,
     });
   }
+
+  // ========== Config ==========
+
+  /**
+   * Get downloader configuration
+   * @returns
+   */
+  public async getConfig(): Promise<DownloaderStoreConfig> {
+    return this.doRequest<DownloaderStoreConfig>('GET', '/api/v1/config');
+  }
+
+  /**
+   * Update downloader configuration
+   * @param config - The new configuration
+   */
+  public async putConfig(config: DownloaderStoreConfig): Promise<void> {
+    await this.doRequest('PUT', '/api/v1/config', {
+      data: config,
+    });
+  }
+
+  // ========== Extensions ==========
+
+  /**
+   * Install an extension from a Git URL or a local folder (dev mode)
+   * @param request - Install request containing URL and optional devMode flag
+   * @returns The identity of the installed extension
+   */
+  public async installExtension(request: InstallExtension): Promise<string> {
+    return this.doRequest<string>('POST', '/api/v1/extensions', {
+      data: request,
+    });
+  }
+
+  /**
+   * Get all installed extensions
+   * @returns
+   */
+  public async getExtensions(): Promise<Extension[]> {
+    return this.doRequest<Extension[]>('GET', '/api/v1/extensions');
+  }
+
+  /**
+   * Get a single extension by identity
+   * @param identity - Extension identity (e.g. "author@name")
+   * @returns
+   */
+  public async getExtension(identity: string): Promise<Extension> {
+    return this.doRequest<Extension>('GET', `/api/v1/extensions/${encodeURIComponent(identity)}`);
+  }
+
+  /**
+   * Update settings of an extension
+   * @param identity - Extension identity
+   * @param settings - Key-value settings map
+   */
+  public async updateExtensionSettings(identity: string, settings: UpdateExtensionSettings): Promise<void> {
+    await this.doRequest('PUT', `/api/v1/extensions/${encodeURIComponent(identity)}/settings`, {
+      data: settings,
+    });
+  }
+
+  /**
+   * Enable or disable an extension
+   * @param identity - Extension identity
+   * @param status - true to enable, false to disable
+   */
+  public async switchExtension(identity: string, status: boolean): Promise<void> {
+    const req: SwitchExtension = { status };
+    await this.doRequest('PUT', `/api/v1/extensions/${encodeURIComponent(identity)}/switch`, {
+      data: req,
+    });
+  }
+
+  /**
+   * Delete an extension
+   * @param identity - Extension identity
+   */
+  public async deleteExtension(identity: string): Promise<void> {
+    await this.doRequest('DELETE', `/api/v1/extensions/${encodeURIComponent(identity)}`);
+  }
+
+  /**
+   * Check if a new version is available for an extension
+   * @param identity - Extension identity
+   * @returns Update check result containing newVersion (empty string if up-to-date)
+   */
+  public async updateCheckExtension(identity: string): Promise<UpdateCheckExtensionResp> {
+    return this.doRequest<UpdateCheckExtensionResp>('GET', `/api/v1/extensions/${encodeURIComponent(identity)}/update`);
+  }
+
+  /**
+   * Upgrade an extension to the latest version
+   * @param identity - Extension identity
+   */
+  public async updateExtension(identity: string): Promise<void> {
+    await this.doRequest('POST', `/api/v1/extensions/${encodeURIComponent(identity)}/update`);
+  }
+
+  // ========== Private ==========
 
   private async doRequest<T>(
     method: string,
