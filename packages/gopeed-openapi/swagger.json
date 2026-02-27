@@ -1786,8 +1786,8 @@
 						}
 					}
 				},
-				"description": "Get server info",
-				"summary": "Get server info",
+				"description": "Get gopeed info",
+				"summary": "Get gopeed info",
 				"tags": [
 					"Info"
 				],
@@ -2123,8 +2123,8 @@
 						}
 					}
 				},
-				"description": "Get task info",
-				"summary": "Get task",
+				"description": "Get a task info",
+				"summary": "Get a task",
 				"tags": [
 					"Tasks"
 				],
