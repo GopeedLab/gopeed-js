@@ -4,6 +4,15 @@ import { BtReqExtra, HttpMethod, HttpReqExtra, ReqExtra, Request, Resource, Task
 /** Request extra is read-only; use task.meta.req methods to modify it. */
 export type ReadonlyExtra<T> = T extends object ? { readonly [K in keyof T]: ReadonlyExtra<T[K]> } : T;
 
+/**
+ * All request operations are available without a type assertion.
+ * Protocol-specific operations are no-ops for other protocols.
+ * Only methods are combined; extra retains its protocol data union by default.
+ */
+export type MutateRequest<E extends ReqExtra = ReqExtra> =
+  Omit<MutateHttpRequest & MutateBtRequest, 'extra'> &
+  Pick<MutateBaseRequest<E>, 'extra'>;
+
 export interface MutateTask<E extends ReqExtra = ReqExtra> extends Omit<Task, 'meta'> {
   meta: Omit<Task['meta'], 'req'> & {
     readonly req: MutateRequest<E>;
@@ -11,7 +20,7 @@ export interface MutateTask<E extends ReqExtra = ReqExtra> extends Omit<Task, 'm
 }
 
 /** Task request operations. Read request data through task.meta.req. */
-export interface MutateRequest<E extends ReqExtra = ReqExtra>
+export interface MutateBaseRequest<E extends ReqExtra = ReqExtra>
   extends ReadonlyExtra<Omit<Request, 'extra'>> {
   /**
    * Replaces all request labels.
@@ -59,14 +68,14 @@ export interface MutateRequest<E extends ReqExtra = ReqExtra>
 }
 
 /** HTTP operations on the original task request. A type assertion does not change the protocol. */
-export interface MutateHttpRequest extends MutateRequest<HttpReqExtra> {
+export interface MutateHttpRequest extends MutateBaseRequest<HttpReqExtra> {
 
   /**
    * Sets the HTTP method, preserving the body and headers.
    * Has no effect on non-HTTP tasks.
    * @example
    * ```ts
-   * const req = ctx.task.meta.req as MutateHttpRequest;
+   * const req = ctx.task.meta.req;
    * // Before: ctx.task.meta.req.extra = { method: 'GET', header: { Accept: 'application/json' } }
    * await req.setMethod('POST');
    * // After: ctx.task.meta.req.extra = { method: 'POST', header: { Accept: 'application/json' } }
@@ -78,7 +87,7 @@ export interface MutateHttpRequest extends MutateRequest<HttpReqExtra> {
    * Has no effect on non-HTTP tasks.
    * @example
    * ```ts
-   * const req = ctx.task.meta.req as MutateHttpRequest;
+   * const req = ctx.task.meta.req;
    * // Before: ctx.task.meta.req.extra = { method: 'POST', body: 'old' }
    * await req.setBody('new');
    * // After: ctx.task.meta.req.extra = { method: 'POST', body: 'new' }
@@ -91,7 +100,7 @@ export interface MutateHttpRequest extends MutateRequest<HttpReqExtra> {
    * Header names are canonicalized; duplicate names ignoring case are rejected.
    * @example
    * ```ts
-   * const req = ctx.task.meta.req as MutateHttpRequest;
+   * const req = ctx.task.meta.req;
    * // Before: ctx.task.meta.req.extra = { method: 'POST', header: { Referer: 'https://example.com' } }
    * await req.setHeaders({ Authorization: 'Bearer new' });
    * // After: ctx.task.meta.req.extra = { method: 'POST', header: { Authorization: 'Bearer new' } }
@@ -103,7 +112,7 @@ export interface MutateHttpRequest extends MutateRequest<HttpReqExtra> {
    * Has no effect on non-HTTP tasks.
    * @example
    * ```ts
-   * const req = ctx.task.meta.req as MutateHttpRequest;
+   * const req = ctx.task.meta.req;
    * // Before: ctx.task.meta.req.extra.header = { authorization: 'Bearer old', Accept: 'application/json' }
    * await req.putHeader('Authorization', 'Bearer new');
    * // After: ctx.task.meta.req.extra.header = { Authorization: 'Bearer new', Accept: 'application/json' }
@@ -115,7 +124,7 @@ export interface MutateHttpRequest extends MutateRequest<HttpReqExtra> {
    * Has no effect on non-HTTP tasks.
    * @example
    * ```ts
-   * const req = ctx.task.meta.req as MutateHttpRequest;
+   * const req = ctx.task.meta.req;
    * // Before: ctx.task.meta.req.extra.header = { Authorization: 'Bearer token', Accept: 'application/json' }
    * await req.delHeader('authorization');
    * // After: ctx.task.meta.req.extra.header = { Accept: 'application/json' }
@@ -125,14 +134,14 @@ export interface MutateHttpRequest extends MutateRequest<HttpReqExtra> {
 }
 
 /** BT operations on the original task request. A type assertion does not change the protocol. */
-export interface MutateBtRequest extends MutateRequest<BtReqExtra> {
+export interface MutateBtRequest extends MutateBaseRequest<BtReqExtra> {
 
   /**
    * Replaces the tracker list instead of appending to it.
    * Has no effect on non-BT tasks.
    * @example
    * ```ts
-   * const req = ctx.task.meta.req as MutateBtRequest;
+   * const req = ctx.task.meta.req;
    * // Before: ctx.task.meta.req.extra = { trackers: ['udp://old.example:80'] }
    * await req.setTrackers(['udp://new.example:80']);
    * // After: ctx.task.meta.req.extra = { trackers: ['udp://new.example:80'] }
