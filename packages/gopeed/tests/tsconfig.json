@@ -1,0 +1,12 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": false,
+    "baseUrl": "../../..",
+    "paths": {
+      "@gopeed/types": ["packages/gopeed-types/src/index.ts"]
+    }
+  },
+  "files": ["compatibility.ts"]
+}

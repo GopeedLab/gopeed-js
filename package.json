@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "rollup -c",
+    "test:types": "tsc --project packages/gopeed/tests/tsconfig.json",
     "docs": "typedoc",
     "publish": "pnpm publish -r --no-git-checks",
     "bump": "node scripts/bump.js"

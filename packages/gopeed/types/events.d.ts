@@ -17,6 +17,8 @@ export interface MutateTask<E extends ReqExtra = ReqExtra> extends Omit<Task, 'm
   meta: Omit<Task['meta'], 'req'> & {
     readonly req: MutateRequest<E>;
   };
+  /** @deprecated Use task.meta.req.setUrl(url) instead. */
+  setUrl(url: string): Promise<void>;
 }
 
 /** Task request operations. Read request data through task.meta.req. */
@@ -157,10 +159,26 @@ export interface MutateOnErrorTask<E extends ReqExtra = ReqExtra> extends Mutate
   continue(): Promise<void>;
 }
 
+/** Request view injected into events that retain the legacy label methods. */
+export interface LegacyRequest extends Request {
+  /** @deprecated Assign request labels directly in onResolve/onDone. Use task.meta.req.setLabels in onStart/onError. */
+  setLabels(labels: Record<string, string>): Promise<void>;
+  /** @deprecated Assign request labels directly in onResolve/onDone. Use task.meta.req.putLabel in onStart/onError. */
+  putLabel(key: string, value: string): Promise<void>;
+  /** @deprecated Delete request labels directly in onResolve/onDone. Use task.meta.req.delLabel in onStart/onError. */
+  delLabel(key: string): Promise<void>;
+}
+
+/** @deprecated Use MutateTask for onStart or MutateOnErrorTask for onError. */
+export type ExtensionTask = MutateOnErrorTask;
+
 export interface OnResolveContext {
-  req: Request;
+  req: LegacyRequest;
   res?: Resource;
 }
+
+/** @deprecated Use the correctly spelled OnResolveContext instead. */
+export type OnResovleContext = OnResolveContext;
 
 export interface OnStartContext {
   task: MutateTask;
@@ -172,7 +190,7 @@ export interface OnErrorContext {
 }
 
 export interface OnDoneContext {
-  task: Task;
+  task: Task & { meta: Task['meta'] & { req: LegacyRequest } };
 }
 
 export type EventOnResolve = (ctx: OnResolveContext) => Promise<void> | void;
