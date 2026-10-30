@@ -1,5 +1,5 @@
 import '../index';
-import type { ExtensionTask, MutateOnErrorTask, MutateTask, OnResovleContext, OnResolveContext } from '../types/events';
+import type { ExtensionRequest, ExtensionTask, MutateOnErrorTask, MutateTask, OnErrorExtensionTask, OnResovleContext, OnResolveContext } from '../types/events';
 import type { Request } from '@gopeed/types';
 
 // Shared REST/resource request data must still accept plain object literals.
@@ -7,6 +7,8 @@ const request: Request = { url: 'https://example.com/file', labels: { source: 't
 
 const legacyResolveHandler = async (ctx: OnResovleContext): Promise<void> => {
   const correctlySpelled: OnResolveContext = ctx;
+  const legacyRequest: ExtensionRequest = ctx.req;
+  await legacyRequest.putLabel('source', 'legacy');
   await correctlySpelled.req.setLabels({ source: 'legacy' });
   await ctx.req.putLabel('retry', '1');
   await ctx.req.delLabel('retry');
@@ -32,7 +34,8 @@ gopeed.events.onStart(async ({ task }) => {
 
 gopeed.events.onError(async ({ task }) => {
   const legacy: ExtensionTask = task;
-  const current: MutateOnErrorTask = legacy;
+  const legacyRecovery: OnErrorExtensionTask = legacy;
+  const current: MutateOnErrorTask = legacyRecovery;
   await legacy.setUrl(request.url);
   await current.meta.req.setUrl(request.url);
   await legacy.continue();

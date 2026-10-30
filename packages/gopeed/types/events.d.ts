@@ -172,6 +172,12 @@ export interface LegacyRequest extends Request {
 /** @deprecated Use MutateTask for onStart or MutateOnErrorTask for onError. */
 export type ExtensionTask = MutateOnErrorTask;
 
+/** @deprecated Use LegacyRequest for legacy event requests or MutateRequest for task mutation. */
+export type ExtensionRequest = LegacyRequest;
+
+/** @deprecated Use MutateOnErrorTask instead. */
+export type OnErrorExtensionTask = MutateOnErrorTask;
+
 export interface OnResolveContext {
   req: LegacyRequest;
   res?: Resource;
